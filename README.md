@@ -72,4 +72,6 @@ streamlit run app/streamlit_app.py
   url = {[https://github.com/muhammad-siddique-research/systemic-causal-gnn](https://github.com/muhammad-siddique-research/systemic-causal-gnn)}
 }
 
-[https://systemic-causal-gnn.streamlit.app]
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://<your-app-subdomain>.streamlit.app)
+Live Interactive Simulator: https://.streamlit.app
+

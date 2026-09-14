@@ -1,91 +1,202 @@
-import os
+"""Generate a publication-quality interbank contagion network figure.
+
+This script builds a stylized interbank network where banks are classified as
+solvent, distressed, or defaulting. It uses NetworkX for graph construction and
+Matplotlib for publication-style rendering, then saves the figure to the
+assets directory.
+"""
+
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
 
-def generate_network_visualization(n_nodes: int = 35, seed: int = 42):
-    np.random.seed(seed)
-    os.makedirs("assets", exist_ok=True)
 
-    # 1. Build directed interbank exposure graph (scale-free / core-periphery)
-    G = nx.erdos_renyi_graph(n=n_nodes, p=0.14, seed=seed, directed=True)
+ASSET_PATH = Path(__file__).resolve().parents[1] / "assets"
+OUTPUT_PATH = ASSET_PATH / "network_contagion.png"
 
-    # 2. Assign balance-sheet attributes and default cascade states
-    node_colors = []
-    node_sizes = []
-    labels = {}
 
-    for node in G.nodes():
-        # Core institutions vs peripheral banks
-        in_deg = G.in_degree(node)
-        out_deg = G.out_degree(node)
-        size = 350 + (in_deg + out_deg) * 60
-        node_sizes.append(size)
-        labels[node] = f"B{node}"
+def build_network():
+    """Construct a stylized interbank contagion graph."""
+    G = nx.Graph()
 
-        # Classify default status based on high exposure vulnerability
-        if out_deg >= 5 or (in_deg >= 4 and np.random.rand() > 0.45):
-            node_colors.append("#D9381E")  # Insolvent / Defaulting (Red)
-        elif in_deg >= 3:
-            node_colors.append("#F5A623")  # Capital-Depleted / Distressed (Amber)
-        else:
-            node_colors.append("#2E7D32")  # Resilient / Solvent (Green)
+    positions = {
+        "Bank A": (0.00, 1.00),
+        "Bank B": (-0.82, 0.78),
+        "Bank C": (0.82, 0.78),
+        "Bank D": (-1.24, 0.20),
+        "Bank E": (0.00, 0.20),
+        "Bank F": (1.24, 0.20),
+        "Bank G": (-0.82, -0.38),
+        "Bank H": (0.00, -0.38),
+        "Bank I": (0.82, -0.38),
+        "Bank J": (-1.05, -1.00),
+        "Bank K": (0.00, -1.00),
+        "Bank L": (1.05, -1.00),
+    }
 
-    # 3. Compute layout
-    pos = nx.spring_layout(G, k=0.45, iterations=60, seed=seed)
+    status_map = {
+        "Bank A": "solvent",
+        "Bank B": "solvent",
+        "Bank C": "distressed",
+        "Bank D": "solvent",
+        "Bank E": "defaulting",
+        "Bank F": "distressed",
+        "Bank G": "solvent",
+        "Bank H": "defaulting",
+        "Bank I": "distressed",
+        "Bank J": "solvent",
+        "Bank K": "solvent",
+        "Bank L": "distressed",
+    }
 
-    # 4. Render publication-ready plot
-    plt.figure(figsize=(12, 8), dpi=300)
-    plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
+    for bank, pos in positions.items():
+        G.add_node(bank, pos=pos, status=status_map[bank])
 
-    # Draw directed bilateral obligations
-    edge_weights = [0.4 + 0.6 * np.random.rand() for _ in G.edges()]
+    edge_weights = {
+        ("Bank A", "Bank B"): 0.82,
+        ("Bank A", "Bank C"): 0.70,
+        ("Bank A", "Bank D"): 0.64,
+        ("Bank B", "Bank E"): 0.90,
+        ("Bank C", "Bank F"): 0.85,
+        ("Bank D", "Bank G"): 0.73,
+        ("Bank E", "Bank H"): 0.95,
+        ("Bank E", "Bank I"): 0.88,
+        ("Bank F", "Bank I"): 0.66,
+        ("Bank G", "Bank J"): 0.62,
+        ("Bank H", "Bank K"): 0.67,
+        ("Bank I", "Bank L"): 0.71,
+        ("Bank J", "Bank K"): 0.59,
+        ("Bank K", "Bank L"): 0.63,
+        ("Bank D", "Bank E"): 0.48,
+        ("Bank F", "Bank K"): 0.46,
+        ("Bank G", "Bank H"): 0.52,
+    }
+
+    for (u, v), weight in edge_weights.items():
+        G.add_edge(u, v, weight=weight)
+
+    return G, positions
+
+
+def draw_figure(G, positions):
+    """Render the contagion network with publication-quality styling."""
+    fig, ax = plt.subplots(figsize=(12, 9))
+    fig.patch.set_facecolor("#f7f9fc")
+    ax.set_facecolor("#f7f9fc")
+
+    status_colors = {
+        "solvent": "#2E7D32",
+        "distressed": "#F9A825",
+        "defaulting": "#C62828",
+    }
+
+    node_sizes = {
+        "solvent": 550,
+        "distressed": 700,
+        "defaulting": 850,
+    }
+
+    node_labels = {node: node for node in G.nodes}
+    edge_weights = [G[u][v]["weight"] for u, v in G.edges]
+    edge_widths = [1.5 + w * 4.0 for w in edge_weights]
+    edge_colors = ["#536878" for _ in edge_weights]
+
     nx.draw_networkx_edges(
-        G, pos,
-        arrows=True,
-        arrowsize=14,
-        arrowstyle="-|>",
-        edge_color="#7F8C8D",
-        alpha=0.45,
-        width=1.2,
-        connectionstyle="arc3,rad=0.08"
+        G,
+        pos=positions,
+        width=edge_widths,
+        edge_color=edge_colors,
+        alpha=0.7,
+        ax=ax,
     )
 
-    # Draw nodes
-    nx.draw_networkx_nodes(
-        G, pos,
-        node_color=node_colors,
-        node_size=node_sizes,
-        edgecolors="#2C3E50",
-        linewidths=1.2,
-        alpha=0.92
+    for status in ["solvent", "distressed", "defaulting"]:
+        nodes = [n for n, d in G.nodes(data=True) if d["status"] == status]
+        if not nodes:
+            continue
+        nx.draw_networkx_nodes(
+            G,
+            pos=positions,
+            nodelist=nodes,
+            node_color=status_colors[status],
+            node_size=node_sizes[status],
+            edgecolors="white",
+            linewidths=1.5,
+            alpha=0.96,
+            ax=ax,
+        )
+
+    nx.draw_networkx_labels(
+        G,
+        pos=positions,
+        labels=node_labels,
+        font_size=9,
+        font_family="sans-serif",
+        font_weight="bold",
+        ax=ax,
     )
 
-    # Draw node labels
-    nx.draw_networkx_labels(G, pos, labels=labels, font_size=8, font_color="#FFFFFF", font_weight="bold")
-
-    # Custom legend
-    legend_elements = [
-        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='#2E7D32', markersize=11, label='Solvent Institutions'),
-        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='#F5A623', markersize=11, label='Capital Buffer Depleted'),
-        plt.Line2D([0], [0], marker='o', color='w', markerfacecolor='#D9381E', markersize=11, label='Triggered Default Cascade')
+    legend_handles = [
+        plt.Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="",
+            markersize=12,
+            markerfacecolor=status_colors[status],
+            markeredgecolor="white",
+            markeredgewidth=1.5,
+            label=status.title(),
+        )
+        for status in ["solvent", "distressed", "defaulting"]
     ]
-    plt.legend(handles=legend_elements, loc="upper right", frameon=True, fontsize=10, shadow=True)
-
-    plt.title(
-        "Systemic Risk Contagion: Dynamic Interbank Obligation Clearing & Cascade Topology",
-        fontsize=13,
-        fontweight="bold",
-        pad=15
+    legend = ax.legend(
+        handles=legend_handles,
+        loc="upper right",
+        frameon=True,
+        facecolor="white",
+        edgecolor="#d0d7de",
+        fontsize=10,
+        title="Bank status",
+        title_fontsize=11,
     )
-    plt.axis("off")
-    plt.tight_layout()
+    legend.get_frame().set_alpha(0.95)
 
-    # 5. Export high-resolution image
-    output_path = os.path.join("assets", "network_contagion.png")
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close()
-    print(f"✅ Visualization generated successfully: {output_path}")
+    ax.set_title(
+        "Interbank Risk Contagion Network Topology",
+        fontsize=18,
+        fontweight="semibold",
+        pad=20,
+    )
+    ax.set_xlabel("Financial exposure network", fontsize=11, color="#2d3748")
+    ax.set_axis_off()
+
+    return fig, ax
+
+
+def main():
+    """Build the network and save the resulting figure."""
+    ASSET_PATH.mkdir(parents=True, exist_ok=True)
+    G, positions = build_network()
+    fig, _ = draw_figure(G, positions)
+
+    output = OUTPUT_PATH
+    fig.savefig(
+        output,
+        dpi=300,
+        bbox_inches="tight",
+        facecolor=fig.get_facecolor(),
+    )
+    plt.close(fig)
+
+    print(f"Network figure saved to: {output}")
+
 
 if __name__ == "__main__":
-    generate_network_visualization()
+    main()
+ d118745 (Add contagion topology figure)

@@ -42,6 +42,16 @@ $$\psi(W; \theta, \eta) = \big( (Y - g(X)) - \theta (D - m(X)) \big) (D - m(X))$
 | **Dynamic GAT (Pure ML)** | 0.912 ± 0.01 | 5.1% | +0.098 (Confounded Policy Estimates) |
 | **`systemic-causal-gnn` (Ours)**| **0.918 ± 0.01** | **3.8%** | **+0.006 (Asymptotically Unbiased)** |
 
+## 📊 Systemic Contagion Dynamics & Topology
+
+The framework maps dynamic interbank clearing dynamics, identifying cascading default pathways and capital depletion thresholds across counterparties:
+
+<p align="center">
+  <img src="assets/network_contagion.png" alt="Systemic Contagion Network Topology" width="850"/>
+</p>
+
+*Figure 1: High-resolution equilibrium state of an interbank exposure graph following an exogenous liquidity shock. Red nodes represent defaulting clearing nodes under the Eisenberg-Noe equilibrium, yellow nodes denote capital-impaired institutions, and green nodes indicate solvent counterparties.*
+
 ---
 
 ## 🚀 Quickstart & Pipeline Execution

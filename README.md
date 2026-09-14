@@ -52,6 +52,16 @@ The framework maps dynamic interbank clearing dynamics, identifying cascading de
 
 *Figure 1: High-resolution equilibrium state of an interbank exposure graph following an exogenous liquidity shock. Red nodes represent defaulting clearing nodes under the Eisenberg-Noe equilibrium, yellow nodes denote capital-impaired institutions, and green nodes indicate solvent counterparties.*
 
+## 📈 Empirical Phase Transition & Causal Policy Identification
+
+The framework empirically isolates structural tipping points and debiases policy counterfactuals across high-dimensional latent graph embeddings:
+
+<p align="center">
+  <img src="assets/empirical_validation_panel.png" alt="Empirical Validation Panel" width="850"/>
+</p>
+
+*Figure 2: Empirical stress-testing validation. (Panel A) Non-linear systemic shortfall acceleration across secondary asset market discount parameters $\alpha$, confirming the existence of an endogenous systemic tipping point ($\alpha_c \approx 0.45$). (Panel B) Point estimates and 95% asymptotic confidence bounds: the Neyman-orthogonal Double ML estimator eliminates high-dimensional network confounding bias relative to standard regression baselines.*
+
 ---
 
 ## 🚀 Quickstart & Pipeline Execution
@@ -98,11 +108,3 @@ The architecture addresses three core identification problems in empirical finan
 * **Theorem 2 (Neyman Orthogonality of GNN Representations):** Given latent topological representation $\mathbf{S} = \text{ST-GAT}(\mathbf{X}, \mathbf{A})$, the estimator $\hat{\theta}$ satisfies:
   $$\left. \frac{\partial}{\partial \eta} \mathbb{E}\left[ \psi(W; \theta_0, \eta) \right] \right|_{\eta = \eta_0} = \mathbf{0}$$
   insulating policy inferences from deep neural network convergence rates down to $O(n^{-1/4})$.
-
-### 📈 Empirical Phase Transition & Policy Recovery
-
-<p align="center">
-  <img src="assets/empirical_validation_panel.png" alt="Empirical Validation Panel" width="850"/>
-</p>
-
-*Figure 2: Empirical stress-testing validation. (Panel A) Non-linear systemic shortfall acceleration across secondary asset market discount parameters $\alpha$, confirming the existence of a systemic tipping point ($\alpha_c \approx 0.45$). (Panel B) Elimination of confounding bias via Neyman-orthogonal cross-fitting relative to standard regression models.*

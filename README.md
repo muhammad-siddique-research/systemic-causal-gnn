@@ -71,3 +71,5 @@ streamlit run app/streamlit_app.py
   publisher = {GitHub},
   url = {[https://github.com/muhammad-siddique-research/systemic-causal-gnn](https://github.com/muhammad-siddique-research/systemic-causal-gnn)}
 }
+
+[https://systemic-causal-gnn.streamlit.app]

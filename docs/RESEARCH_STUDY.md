@@ -86,7 +86,7 @@ For each independently generated network, simulated node covariates include prom
 
 All nodes within one network share obligations and the global shock. To prevent optimistic estimates from sharing network information across the sample boundary, `GroupShuffleSplit` assigns whole networks to train or test. Baselines are regularized Logistic Regression, Random Forests and Histogram Gradient-Boosted Trees. The analysis exports ROC-AUC, Average Precision (PR-AUC), Brier score, negative log likelihood, and calibration bins.
 
-Permutation reliance on the held-out set describes predictive feature dependence, subject to feature correlation. It does not show causality or identify a regulatory lever. Because the same holdout selects the “best” model and is used to assess its calibration, model-selection optimism remains; a three-way train/validation/test design is a future improvement.
+Permutation reliance on the held-out set describes predictive feature dependence, subject to feature correlation. It does not show causality or identify a regulatory lever. A three-way **network-grouped training/validation/untouched-test** split now separates model selection from final evaluation. However, model tuning and simulations still reflect a single prespecified data-generating process, and out-of-DGP validation has not been established.
 
 **Graph caveat:** The original repo contains a GAT–GRU prototype, but **the default predictive benchmark does not train or validate that architecture**. Its scores must not be attributed to a GNN. The architecture can be evaluated on genuinely held-out independent graph draws in a separate experiment after implementing a comparable preprocessing and splitting protocol.
 

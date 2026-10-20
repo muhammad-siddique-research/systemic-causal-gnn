@@ -84,7 +84,7 @@ Monotonicity is expected for added external financial resources under the specif
 
 For each independently generated network, simulated node covariates include promised obligations, incoming receivables, before/after-shock external assets, funding buffers, link counts, shock vulnerability, graph density and prescribed shock strength. Defaults are created by solving the clearing model, **not by fabricating prediction labels**.
 
-All nodes within one network share obligations and the global shock. To prevent optimistic estimates from sharing network information across the sample boundary, \`GroupShuffleSplit\` assigns whole networks to train or test. Baselines are regularized Logistic Regression, Random Forests and Histogram Gradient-Boosted Trees. The analysis exports ROC-AUC, Average Precision (PR-AUC), Brier score, negative log likelihood, and calibration bins.
+All nodes within one network share obligations and the global shock. To prevent optimistic estimates from sharing network information across the sample boundary, `GroupShuffleSplit` assigns whole networks to train or test. Baselines are regularized Logistic Regression, Random Forests and Histogram Gradient-Boosted Trees. The analysis exports ROC-AUC, Average Precision (PR-AUC), Brier score, negative log likelihood, and calibration bins.
 
 Permutation reliance on the held-out set describes predictive feature dependence, subject to feature correlation. It does not show causality or identify a regulatory lever. Because the same holdout selects the “best” model and is used to assess its calibration, model-selection optimism remains; a three-way train/validation/test design is a future improvement.
 

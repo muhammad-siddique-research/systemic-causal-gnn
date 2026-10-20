@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   gnn:
@@ -35,3 +35,16 @@ jobs:
           path: reports/gnn/
           retention-days: 30
           if-no-files-found: error
+
+      - name: Publish independently tested synthetic GNN report to repository
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --mixed origin/main
+          git add reports/gnn/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish held-out synthetic GNN model evidence [skip ci]"
+            git push origin HEAD:main
+          fi

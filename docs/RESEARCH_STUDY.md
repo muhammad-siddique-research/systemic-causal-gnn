@@ -24,7 +24,7 @@ Interbank networks can absorb or amplify shocks; their structure and the magnitu
 
 The research gap addressed here is **not the invention of network contagion theory, DML or graph attention**. Those methods are established. The practical gap is transparent and code-verifiable integration of distinct methodological tasks: a stable clearing calculation, paired simulation-based interventions, independent-network prediction evaluation, and a known-truth DML design with correctly formulated cross-fitting.
 
-A broad literature review would still be needed before claiming the integration is novel in the peer-reviewed literature. The current deliverable is a research-engineering demonstration suitable for rigorous technical inspection.
+Recent literature further cautions against overclaiming novelty or direct causal inference: Fialkowski et al. (2026) study multi-layer financial contagion; Valderrama and Varghese (2026) analyze bank and non-bank exposures with supervisory data; and Hays and Raghavan (2025) develop Double Machine Learning for a specified form of shared-state interference. Our independent-observation DML exercise does **not** implement their network-interference design. A broad literature review would still be needed before claiming the integration is novel in the peer-reviewed literature. The current deliverable is a research-engineering demonstration suitable for rigorous technical inspection.
 
 ### Research questions
 
@@ -88,7 +88,7 @@ All nodes within one network share obligations and the global shock. To prevent 
 
 Permutation reliance on the held-out set describes predictive feature dependence, subject to feature correlation. It does not show causality or identify a regulatory lever. A three-way **network-grouped training/validation/untouched-test** split now separates model selection from final evaluation. However, model tuning and simulations still reflect a single prespecified data-generating process, and out-of-DGP validation has not been established.
 
-**Graph caveat:** The original repo contains a GAT–GRU prototype, but **the default predictive benchmark does not train or validate that architecture**. Its scores must not be attributed to a GNN. The architecture can be evaluated on genuinely held-out independent graph draws in a separate experiment after implementing a comparable preprocessing and splitting protocol.
+**Graph caveat:** The original GAT–GRU architecture is now evaluated **separately on independent synthetic network draws** (27 training graphs, nine test graphs; held-out ROC-AUC 0.9305 on 108 nodes). This is a supervised simulation benchmark, not an observed-bank forecast or a causal GNN. Its draws and training protocol differ from those used for the tabular benchmark, so model rankings are not paired.
 
 ## 4. Econometric validation: known-truth Double Machine Learning
 
@@ -131,7 +131,7 @@ with \(\hat\psi_i=(D_i-\hat m_i)
 
 ## 5. Research outputs and interpretation
 
-The pipeline writes:
+The pipeline writes (plus a separately validated seventh graph prediction figure):
 - An independent-network policy table, paired network-bootstrap CI and two network-clearing figures.
 - A network-grouped predictor comparison, a held-out calibration table, feature reliance and two diagnostic figures.
 - Replicated known-truth DML results and a comparison figure.
@@ -179,3 +179,14 @@ Glasserman, P., & Young, H. P. (2015). How likely is contagion in financial netw
 Glasserman, P., & Young, H. P. (2016). Contagion in financial networks. *Journal of Economic Literature, 54*(3), 779–831. https://doi.org/10.1257/jel.20151228
 
 Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). Graph attention networks. *International Conference on Learning Representations*. https://openreview.net/forum?id=rJXMpikCZ
+
+
+### Selected recent research (APA 7th edition)
+
+Fialkowski, J., Diem, C., Borsos, A., & Thurner, S. (2026). A data-driven econo-financial stress-testing framework to estimate the effect of supply chain networks on financial systemic risk. *Journal of Economic Dynamics and Control, 188*, 105333. https://doi.org/10.1016/j.jedc.2026.105333
+
+Hays, C., & Raghavan, M. (2025). Double machine learning for causal inference under shared-state interference. In *Proceedings of the 42nd International Conference on Machine Learning* (Vol. 267, pp. 22318–22350). PMLR. https://proceedings.mlr.press/v267/hays25a.html
+
+Pan, H., Wang, Z., Zhang, H., & Ding, S. (2026). Economic uncertainty, shadow banking, and systemic risk: A perspective of interbank network structure analysis. *The North American Journal of Economics and Finance, 83*, 102600. https://doi.org/10.1016/j.najef.2026.102600
+
+Valderrama, L., & Varghese, R. (2026). *Risk propagation in the European banking system: Amplification effects from NBFIs and market risks* (IMF Working Paper No. 2026/033). International Monetary Fund. https://doi.org/10.5089/9798229041508.001

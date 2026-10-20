@@ -42,7 +42,11 @@ class GraphAttentionLayer(nn.Module):
 
 class SpatioTemporalCausalGNN(nn.Module):
     """
-    Spatio-Temporal Graph Neural Network with an integrated Causal Double ML head.
+    Spatio-temporal GAT/GRU with supervised risk and auxiliary regression heads.
+
+    Historical class name is retained for import compatibility. There is no
+    cross-fitted orthogonal DML estimator in this torch.nn.Module; an auxiliary
+    treatment head alone does not identify an intervention effect.
     """
     def __init__(self, in_features: int, hidden_dim: int, num_layers: int = 1, dropout: float = 0.1):
         super().__init__()
@@ -57,7 +61,7 @@ class SpatioTemporalCausalGNN(nn.Module):
             nn.Sigmoid()
         )
         
-        # Causal Nuisance Head: Predicts continuous treatment propensity m(X)
+        # Auxiliary regression head: not a causal propensity/orthogonal moment.
         self.treatment_head = nn.Sequential(
             nn.Linear(hidden_dim, 32),
             nn.ReLU(),

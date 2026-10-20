@@ -21,7 +21,7 @@
 | **Financial clearing and network effects** | Directed liabilities and Eisenberg–Noe greatest clearing fixed point | Numerical properties of the simulated mechanism |
 | **Macroprudential capital allocation** | Same-network and same-shock comparison: equal-budget injections to largest debtor vs. random node | Controlled **model** contrasts; no real policy effect |
 | **Computational Econometrics** | Cross-fitted orthogonal partially linear regression; known-truth Monte Carlo | Synthetic IID identification and estimator sensitivity |
-| **Predictive Machine Learning** | Logistic regression, Random Forest, boosted trees; split by independent **network** | Out-of-network synthetic default prediction, no node-leakage |
+| **Predictive Machine Learning** | Logistic regression, Random Forest, boosted trees; split by independent **network**, with separate training, validation and untouched test sets | Out-of-network synthetic default prediction, no node-leakage |
 | **Graph neural architecture** | GAT plus temporal GRU, supervised risk output | Prototype model; independent validation separate from headline benchmark |
 | **Research integrity** | Reproducible seeds, convergence assertions, robust error handling, CI, audit logs | Transparent simulated evidence and uncertainty boundaries |
 

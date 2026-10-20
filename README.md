@@ -27,7 +27,7 @@
 
 ### Reproducible research workflow
 
-\`\`\`mermaid
+```mermaid
 flowchart LR
     A[Simulated directed liabilities] --> B[Eisenberg-Noe clearing]
     B --> C[Paired injections]
@@ -40,7 +40,7 @@ flowchart LR
     D --> K[Reproducible figures and caveats]
     G --> K
     J --> K
-\`\`\`
+```
 
 ## Results and scientific figures
 
@@ -119,7 +119,7 @@ None is presented as a novel proved theorem or an observation about historical b
 
 Python 3.11 or 3.12 is recommended. An ordinary computer can run all default reproducibility checks **without a GPU**.
 
-\`\`\`bash
+```bash
 git clone https://github.com/muhammad-siddique-research/systemic-causal-gnn.git
 cd systemic-causal-gnn
 python -m venv .venv
@@ -129,29 +129,29 @@ python -m pip install -r requirements-core.txt
 
 python -m src.research.pipeline --out reports --networks 140 --dml-reps 10
 python -m pytest -q tests/test_research.py
-\`\`\`
+```
 
 For the **interactive, simulation-derived** dashboard:
 
-\`\`\`bash
+```bash
 pip install streamlit
 streamlit run app/streamlit_app.py
-\`\`\`
+```
 
-The PyTorch graph model is a separately maintained optional research prototype. Install full dependencies from \`requirements.txt\` to explore it. It is not silently substituted for a trained GNN benchmark in the main results.
+The PyTorch graph model is a separately maintained optional research prototype. Install full dependencies from `requirements.txt` to explore it. It is not silently substituted for a trained GNN benchmark in the main results.
 
 ## Output dictionary
 
 | Path | Meaning |
 |---|---|
-| \`reports/REPRODUCIBLE_RESULTS.md\` | Code-generated study summary with interpretation |
-| \`reports/research_provenance.json\` | Seed, cohort DGP, results caveats |
-| \`reports/synthetic_network_policy_pairs.csv\` | Independently simulated networks and paired policies |
-| \`reports/out_of_network_predictive_benchmarks.csv\` | Held-out logistic / forest / boosting metrics |
-| \`reports/heldout_synthetic_calibration.csv\` | Reliability summaries of selected synthetic predictive model |
-| \`reports/heldout_permutation_reliance.csv\` | Held-out permutation importance |
-| \`reports/independent_dml_monte_carlo.csv\` | Replicated IID known-truth DML experiments |
-| \`reports/figures/\` | Six figures generated in PNG and SVG |
+| `reports/REPRODUCIBLE_RESULTS.md` | Code-generated study summary with interpretation |
+| `reports/research_provenance.json` | Seed, cohort DGP, results caveats |
+| `reports/synthetic_network_policy_pairs.csv` | Independently simulated networks and paired policies |
+| `reports/out_of_network_predictive_benchmarks.csv` | Held-out logistic / forest / boosting metrics |
+| `reports/heldout_synthetic_calibration.csv` | Reliability summaries of selected synthetic predictive model |
+| `reports/heldout_permutation_reliance.csv` | Held-out permutation importance |
+| `reports/independent_dml_monte_carlo.csv` | Replicated IID known-truth DML experiments |
+| `reports/figures/` | Six figures generated in PNG and SVG |
 
 **Reproducibility caveat:** Perfect reproduction assumes compatible versions of core dependencies; nonlinear tree fits can change slightly across library versions.
 
@@ -175,6 +175,6 @@ Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y.
 
 ## Research integrity and attribution
 
-The original repo included illustrative graphical panels labeled as “empirical” and a benchmark table claiming specific GNN performance and near-unbiased policy effects. Those claims are **not reproducibly validated** by the historical code and are excluded from the revised reporting. Old files under \`assets/\` and \`src/analytics/\` are retained as legacy demonstrations, **not substantiating empirical evidence**. The updated reproducible reports are authoritative.
+The original repo included illustrative graphical panels labeled as “empirical” and a benchmark table claiming specific GNN performance and near-unbiased policy effects. Those claims are **not reproducibly validated** by the historical code and are excluded from the revised reporting. Old files under `assets/` and `src/analytics/` are retained as legacy demonstrations, **not substantiating empirical evidence**. The updated reproducible reports are authoritative.
 
 This code is a **computational methods research portfolio**, not a peer-reviewed article, regulatory stress test, public-health policy evaluation, or substitute for observed financial exposures. MIT license retained.

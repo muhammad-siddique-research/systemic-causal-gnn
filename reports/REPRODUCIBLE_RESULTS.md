@@ -16,7 +16,7 @@
 | Gradient-Boosted Trees |      1680 |            560 |      560 |               84 |                    28 |              28 |            0.1625 |               0.9919 |    0.9940 |              0.9675 |  0.0263 |     0.0920 | False                    |
 | Random Forest          |      1680 |            560 |      560 |               84 |                    28 |              28 |            0.1625 |               0.9875 |    0.9855 |              0.9389 |  0.0438 |     0.1560 | False                    |
 
-**Qualification:** Tabular supervised classifiers (logistic, RF, boosting), not a validated graph neural network. Model selection used test AUC; additional nested validation is needed.
+**Qualification:** Tabular supervised classifiers (logistic, RF, boosting), not a validated graph neural network. Selection used separate validation networks; final metrics use an untouched network-level test set.
 
 ## Cross-fitted DML known-truth exercise
 

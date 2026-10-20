@@ -1,8 +1,9 @@
-"""Systemic stress-test analysis with theory, phase-transition, and validation plots.
+"""LEGACY STYLIZED FIGURES — NOT VALIDATED EMPIRICAL RESULTS.
 
-This script combines the more detailed causal and phase-transition analytics from
-an earlier benchmark with the more recent multi-panel empirical summary so the
-repository keeps a rich and consistent output for macroprudential stress testing.
+All 'observed' arrays here are invented illustrative quantities. Historical
+calibration, financial network phase-transition location and 'causal' policy
+effect from this module are NOT established. For validated, source-labeled
+simulations use: python -m src.research.pipeline
 """
 
 import os
@@ -35,7 +36,7 @@ def phase_transition_data():
 
 
 def empirical_validation_data():
-    """Construct synthetic empirical validation points."""
+    """Construct invented demonstration points; NOT observed outcomes."""
     scenarios = np.array([0.3, 0.45, 0.6, 0.75, 0.9])
     observed = np.array([0.08, 0.22, 0.49, 0.77, 0.93])
     modeled = np.array([0.10, 0.24, 0.52, 0.75, 0.91])
@@ -76,7 +77,7 @@ def build_figure():
     max_val = max(np.max(observed), np.max(modeled)) + 0.05
     ref = np.linspace(min_val, max_val, 100)
     axes[1, 0].plot(ref, ref, linestyle="--", color="#4d4d4d", linewidth=1.5, alpha=0.8)
-    axes[1, 0].set_title("Empirical Validation", fontsize=13, fontweight="bold")
+    axes[1, 0].set_title("Illustrative Values (Not Observed)", fontsize=13, fontweight="bold")
     axes[1, 0].set_xlabel("Observed default rate")
     axes[1, 0].set_ylabel("Modeled default rate")
     axes[1, 0].set_xlim(min_val, max_val)
@@ -94,7 +95,7 @@ def build_figure():
     axes[1, 1].legend(frameon=True)
 
     fig.suptitle(
-        "Macroprudential Stress Testing: Theory, Phase Transition, and Empirical Validation",
+        "Legacy Demonstrations: Stylized Curves, No Empirical Validation",
         fontsize=19,
         fontweight="bold",
         y=0.98,
@@ -109,7 +110,7 @@ def run_comprehensive_analytics(n_banks: int = 50, n_simulations: int = 500):
     ASSET_DIR.mkdir(parents=True, exist_ok=True)
 
     print("=" * 75)
-    print(" 🔬 SYSTEMIC CAUSAL GNN: MACROPRUDENTIAL EMPIRICAL BENCHMARK ENGINE")
+    print(" LEGACY SYNTHETIC BENCHMARK — NO OBSERVED FINANCIAL DATA ")
     print("=" * 75)
 
     alphas = np.linspace(0.0, 1.2, 25)
@@ -173,13 +174,13 @@ def run_comprehensive_analytics(n_banks: int = 50, n_simulations: int = 500):
     plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
 
     axes[0].plot(alphas, mean_shortfalls, marker="o", color="#C0392B", linewidth=2, label="Aggregate Losses ($M)")
-    axes[0].axvline(x=0.45, color="#2C3E50", linestyle="--", label=r"Empirical Phase Transition ($\alpha_c \approx 0.45$)")
+    axes[0].axvline(x=0.45, color="#2C3E50", linestyle="--", label=r"Unverified reference $\alpha=0.45$ (illustrative)")
     axes[0].set_title(r"$\mathbf{Panel\ A:}$ Contagion Phase Transition & Non-Linear Loss", fontsize=11, fontweight="bold")
     axes[0].set_xlabel(r"Asset Illiquidity / Fire-Sale Parameter ($\alpha$)", fontsize=10)
     axes[0].set_ylabel("Total Systemic Shortfall ($ Billions)", fontsize=10)
     axes[0].legend(frameon=True, fontsize=9)
 
-    estimators = ["Naive OLS", "DML (ST-GNN)"]
+    estimators = ["Naive OLS", "Synthetic RF-DML"]
     estimates = [theta_naive, theta_dml]
     errors = [0.0, 1.96 * sigma_dml]
     axes[1].errorbar(

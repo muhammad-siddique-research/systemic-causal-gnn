@@ -1,0 +1,31 @@
+name: Optional Graph Model Validation
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gnn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install main dependencies and CPU PyTorch
+        run: |
+          python -m pip install -r requirements-core.txt
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - name: Check GAT-GRU on independently simulated graphs
+        run: python -m pytest -q tests/test_gnn.py
+      - name: Reproduce separate supervised GNN benchmark
+        run: python -m src.research.gnn_benchmark --graphs 36 --nodes 12 --epochs 14 --output reports/gnn
+      - name: Save independent-network GNN results
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-gnn-heldout-validation
+          path: reports/gnn/
+          retention-days: 30
+          if-no-files-found: error

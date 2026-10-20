@@ -51,10 +51,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          # Reattach the generated worktree to the latest branch before
+          # staging outputs. This avoids add/add conflicts if a prior run
+          # published the same SVG or PNG paths.
+          git reset --mixed origin/main
           git add reports/
           if ! git diff --cached --quiet; then
             git commit -m "Publish reproducible synthetic network research outputs [skip ci]"
-            git fetch origin main
-            git rebase origin/main
             git push origin HEAD:main
+          else
+            echo "Latest branch already contains identical generated outputs"
           fi

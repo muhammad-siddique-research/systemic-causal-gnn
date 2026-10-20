@@ -10,11 +10,11 @@
 
 ## Out-of-network predictive models
 
-| model                  |   n_train |   n_test |   train_networks |   test_networks |   test_event_rate |   roc_auc |   average_precision |   brier |   log_loss |
-|:-----------------------|----------:|---------:|-----------------:|----------------:|------------------:|----------:|--------------------:|--------:|-----------:|
-| Regularized Logistic   |      2100 |      700 |              105 |              35 |            0.1700 |    0.9979 |              0.9914 |  0.0171 |     0.0637 |
-| Gradient-Boosted Trees |      2100 |      700 |              105 |              35 |            0.1700 |    0.9965 |              0.9848 |  0.0192 |     0.0680 |
-| Random Forest          |      2100 |      700 |              105 |              35 |            0.1700 |    0.9931 |              0.9716 |  0.0369 |     0.1374 |
+| model                  |   n_train |   n_validation |   n_test |   train_networks |   validation_networks |   test_networks |   test_event_rate |   validation_roc_auc |   roc_auc |   average_precision |   brier |   log_loss | selected_on_validation   |
+|:-----------------------|----------:|---------------:|---------:|-----------------:|----------------------:|----------------:|------------------:|---------------------:|----------:|--------------------:|--------:|-----------:|:-------------------------|
+| Regularized Logistic   |      1680 |            560 |      560 |               84 |                    28 |              28 |            0.1625 |               0.9956 |    0.9951 |              0.9768 |  0.0222 |     0.0762 | True                     |
+| Gradient-Boosted Trees |      1680 |            560 |      560 |               84 |                    28 |              28 |            0.1625 |               0.9919 |    0.9940 |              0.9675 |  0.0263 |     0.0920 | False                    |
+| Random Forest          |      1680 |            560 |      560 |               84 |                    28 |              28 |            0.1625 |               0.9875 |    0.9855 |              0.9389 |  0.0438 |     0.1560 | False                    |
 
 **Qualification:** Tabular supervised classifiers (logistic, RF, boosting), not a validated graph neural network. Model selection used test AUC; additional nested validation is needed.
 

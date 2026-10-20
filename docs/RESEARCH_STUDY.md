@@ -88,7 +88,7 @@ All nodes within one network share obligations and the global shock. To prevent 
 
 Permutation reliance on the held-out set describes predictive feature dependence, subject to feature correlation. It does not show causality or identify a regulatory lever. A three-way **network-grouped training/validation/untouched-test** split now separates model selection from final evaluation. However, model tuning and simulations still reflect a single prespecified data-generating process, and out-of-DGP validation has not been established.
 
-**Graph caveat:** The original GAT–GRU architecture is now evaluated **separately on independent synthetic network draws** (27 training graphs, nine test graphs; held-out ROC-AUC 0.9305 on 108 nodes). This is a supervised simulation benchmark, not an observed-bank forecast or a causal GNN. Its draws and training protocol differ from those used for the tabular benchmark, so model rankings are not paired.
+**Graph caveat:** The original GAT–GRU architecture is now evaluated **separately on independent synthetic network draws** (27 training graphs, nine test graphs; versioned ROC-AUC and PR-AUC in `reports/gnn/gnn_heldout_metrics.json` for 108 nodes). This is a supervised simulation benchmark, not an observed-bank forecast or a causal GNN. Its draws and training protocol differ from those used for the tabular benchmark, so model rankings are not paired.
 
 ## 4. Econometric validation: known-truth Double Machine Learning
 

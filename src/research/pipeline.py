@@ -82,7 +82,7 @@ def run(out: Path, n_networks: int = 140,
         pred.to_markdown(index=False, floatfmt=".4f"), "",
         "**Qualification:** Tabular supervised classifiers (logistic, RF, "
         "boosting), not a validated graph neural network. "
-        "Model selection used test AUC; additional nested validation is needed.", "",
+        "Selection used separate validation networks; final metrics use an untouched network-level test set.", "",
         "## Cross-fitted DML known-truth exercise", "",
         f"- True synthetic coefficient: **{dml.theta_true.iloc[0]:.3f}**",
         f"- Mean naive OLS estimate: **{dml.theta_naive_ols.mean():.3f}**",

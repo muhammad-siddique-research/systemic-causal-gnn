@@ -8,7 +8,7 @@
 | Paired injection contrasts | Same fabricated network and identical shock | Network pair | Difference in modeled losses after equal-budget capital | **No**, mechanistic only |
 | `research/prediction.py` | Defaults derived from simulated clearing | Bank nested within independent network draw | Held-out default classification within the simulator | **No** |
 | `research/dml.py` | Separate synthetic partially linear DGP, known true coefficient | Independent synthetic record | Cross-fitted DML bias and CI coverage conditional on IID DGP | **No** |
-| Original `train_st_gnn.py` | Synthetic GAT/GRU node sequence | Synthetic network node | Exploratory in-sample surrogate | No verified independent generalization |
+| `research/gnn_benchmark.py` | Independently simulated GAT/GRU graph sequences | Node nested in previously unseen network | Held-out supervised default prediction | **No**; independent synthetic graph holdout only |
 | `app/streamlit_app.py` | Runs `clear_network` on seeded synthetic liabilities | Current synthetic network | Scenario-specific modeled shortfalls | **No** |
 
 There is **no observed interbank bilateral obligation dataset** in this repository. Historical financial events, actual default ROC-AUC, real-policy treatment effects, empirical contagion thresholds, and healthcare-sector intervention claims are **not established**.
@@ -39,7 +39,7 @@ Each synthetic network is one sampling cluster. A random node split would leak c
 
 Models include regularized logistic regression, random forest and histogram gradient-boosted trees. Report ROC-AUC, average precision, Brier score, log loss, and calibration. Permutation importance describes predictive model reliance; it cannot identify causal drivers of default. The updated design partitions **entire networks** into training, validation, and untouched test sets. Validation ROC-AUC selects the model; test networks provide final reported metrics and calibration. Hyperparameters are fixed, and cross-DGP transport remains untested.
 
-The existing `SpatioTemporalCausalGNN` architecture is a GAT + GRU with a default head and a treatment-regression head, but those heads are *not* a causal identification theorem. Do not interpret predictions from an in-sample network as externally validated default forecasts.
+The legacy-named `SpatioTemporalCausalGNN` is now evaluated on **separate training and test networks** using `research/gnn_benchmark.py`; its treatment-regression head remains **untrained and unused**, and is not an orthogonal causal score. The verified separate benchmark comprises 27 simulated training graphs and nine independent test graphs. Those results are not directly comparable to tabular scores computed with different graph draws.
 
 ## Why a genuine dataset is harder than a public macroeconomic time series
 

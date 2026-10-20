@@ -4,12 +4,12 @@
 
 | Module | Source | Unit | Estimated quantity | Can infer real-world impacts? |
 |---|---|---|---|---|
-| \`research/core.py\` | Algorithmically generated directed liabilities and external assets | Independently drawn financial network, with nodes | Greatest clearing fixed point and unpaid obligations | **No** |
+| `research/core.py` | Algorithmically generated directed liabilities and external assets | Independently drawn financial network, with nodes | Greatest clearing fixed point and unpaid obligations | **No** |
 | Paired injection contrasts | Same fabricated network and identical shock | Network pair | Difference in modeled losses after equal-budget capital | **No**, mechanistic only |
-| \`research/prediction.py\` | Defaults derived from simulated clearing | Bank nested within independent network draw | Held-out default classification within the simulator | **No** |
-| \`research/dml.py\` | Separate synthetic partially linear DGP, known true coefficient | Independent synthetic record | Cross-fitted DML bias and CI coverage conditional on IID DGP | **No** |
-| Original \`train_st_gnn.py\` | Synthetic GAT/GRU node sequence | Synthetic network node | Exploratory in-sample surrogate | No verified independent generalization |
-| \`app/streamlit_app.py\` | Runs \`clear_network\` on seeded synthetic liabilities | Current synthetic network | Scenario-specific modeled shortfalls | **No** |
+| `research/prediction.py` | Defaults derived from simulated clearing | Bank nested within independent network draw | Held-out default classification within the simulator | **No** |
+| `research/dml.py` | Separate synthetic partially linear DGP, known true coefficient | Independent synthetic record | Cross-fitted DML bias and CI coverage conditional on IID DGP | **No** |
+| Original `train_st_gnn.py` | Synthetic GAT/GRU node sequence | Synthetic network node | Exploratory in-sample surrogate | No verified independent generalization |
+| `app/streamlit_app.py` | Runs `clear_network` on seeded synthetic liabilities | Current synthetic network | Scenario-specific modeled shortfalls | **No** |
 
 There is **no observed interbank bilateral obligation dataset** in this repository. Historical financial events, actual default ROC-AUC, real-policy treatment effects, empirical contagion thresholds, and healthcare-sector intervention claims are **not established**.
 
@@ -35,11 +35,11 @@ Report the sign and 95% interval of the paired difference whether positive, nega
 
 ## Predictive benchmark and leakage
 
-Each synthetic network is one sampling cluster. A random node split would leak connected observations and correlated shocks. We use \`GroupShuffleSplit\` by **network_id** so no node from one fabricated network appears in both sets.
+Each synthetic network is one sampling cluster. A random node split would leak connected observations and correlated shocks. We use `GroupShuffleSplit` by **network_id** so no node from one fabricated network appears in both sets.
 
 Models include regularized logistic regression, random forest and histogram gradient-boosted trees. Report ROC-AUC, average precision, Brier score, log loss, and calibration. Permutation importance describes predictive model reliance; it cannot identify causal drivers of default. Selecting the best-performing method on the same test split used to report performance introduces selection optimism. A separate development set and untouched test set would strengthen research credibility.
 
-The existing \`SpatioTemporalCausalGNN\` architecture is a GAT + GRU with a default head and a treatment-regression head, but those heads are *not* a causal identification theorem. Do not interpret predictions from an in-sample network as externally validated default forecasts.
+The existing `SpatioTemporalCausalGNN` architecture is a GAT + GRU with a default head and a treatment-regression head, but those heads are *not* a causal identification theorem. Do not interpret predictions from an in-sample network as externally validated default forecasts.
 
 ## Why a genuine dataset is harder than a public macroeconomic time series
 

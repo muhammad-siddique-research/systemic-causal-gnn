@@ -22,7 +22,7 @@
 | **Macroprudential capital allocation** | Same-network and same-shock comparison: equal-budget injections to largest debtor vs. random node | Controlled **model** contrasts; no real policy effect |
 | **Computational Econometrics** | Cross-fitted orthogonal partially linear regression; known-truth Monte Carlo | Synthetic IID identification and estimator sensitivity |
 | **Predictive Machine Learning** | Logistic regression, Random Forest, boosted trees; split by independent **network**, with separate training, validation and untouched test sets | Out-of-network synthetic default prediction, no node-leakage |
-| **Graph neural architecture** | GAT plus temporal GRU, tested on nine unseen synthetic networks | Held-out supervised ROC-AUC 0.9305; not causal inference or real-bank validation |
+| **Graph neural architecture** | GAT plus temporal GRU, tested on nine unseen synthetic networks | Held-out metrics published in `reports/gnn/gnn_heldout_metrics.json`; not causal or real-bank evidence |
 | **Research integrity** | Reproducible seeds, convergence assertions, robust error handling, CI, audit logs | Transparent simulated evidence and uncertainty boundaries |
 
 ### Reproducible research workflow
@@ -52,7 +52,7 @@ The new pipeline runs entirely with a fixed seed and writes both numerical table
 |---|---|---|
 | 140 financial network draws | Targeted-versus-random capital rule: mean reduction advantage **4.06** arbitrary units; whole-network bootstrap 95% CI **3.04–5.20** | A mechanistic comparison within a specified simulator, not an identified macroprudential effect |
 | Logistic default model, 28 untouched networks | ROC-AUC **0.9951**; n=560 simulated nodes | Near-perfect accuracy reflects a simplified deterministic simulator, not real-bank predictive validity |
-| GAT–GRU on nine unseen networks | ROC-AUC **0.9305**, PR-AUC **0.8137**, n=108 simulated nodes | Separate graph-data experiment; not a paired comparison with logistic prediction |
+| GAT–GRU on nine unseen networks | ROC-AUC and PR-AUC published in the **versioned GNN metrics JSON**, n=108 simulated nodes | Separate graph-data experiment; not a paired comparison with logistic prediction |
 | Ten IID synthetic DML replications | True parameter **−1.500**, mean cross-fit DML **−1.395**, naive OLS **−1.019**; nominal 95% interval coverage **7/10** | DML shows residual finite-sample bias and apparent undercoverage; ten replications cannot validate 95% coverage |
 
 **Research integrity:** high classification scores and positive simulated intervention effects should not be extrapolated. The predictive data-generating process is intentionally simple; model-selection uses validation networks and final evaluation uses untouched networks. The DML confidence intervals are not calibrated for correlated real financial networks.

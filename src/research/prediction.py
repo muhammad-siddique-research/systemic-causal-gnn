@@ -19,7 +19,7 @@ from .core import clear_network, draw_network
 
 FEATURES = [
     "debt_owed", "claims_receivable", "initial_external_assets",
-    "assets_after_shock", "asset_to_obligations",
+    "initial_asset_to_obligations",
     "weighted_in_degree", "weighted_out_degree", "exposure_to_shock",
     "network_density", "shock_strength",
 ]
@@ -48,7 +48,7 @@ def create_node_level_dataset(
                 "claims_receivable": float(receivable[j]),
                 "initial_external_assets": float(assets[j]),
                 "assets_after_shock": float(shocked[j]),
-                "asset_to_obligations": float(shocked[j] / max(owed[j], 1e-6)),
+                "initial_asset_to_obligations": float(assets[j] / max(owed[j], 1e-6)),
                 "weighted_in_degree": float((liabilities[:, j] > 0).sum()),
                 "weighted_out_degree": float((liabilities[j] > 0).sum()),
                 "exposure_to_shock": float(exposure[j]),
@@ -61,21 +61,44 @@ def create_node_level_dataset(
 def evaluate_out_of_network_prediction(
     frame: pd.DataFrame, seed: int = 20261020
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict]:
-    """Report out-of-network probability metrics and feature reliance.
+    """Three-way independent-network split: fit, choose, then evaluate.
 
-    The bank-feature models are comparison baselines, not a trained GNN.
-    Results do not establish real bank default forecast performance.
+    Model selection uses validation networks ONLY. The untouched test networks
+    evaluate all models; after validation chooses the winner, its heldout
+    calibration and permutation reliance are computed on test networks.
     """
     splitter = GroupShuffleSplit(
-        n_splits=1, test_size=.25, random_state=seed
+        n_splits=1, test_size=.20, random_state=seed
     )
-    train, test = next(splitter.split(
+    trainval, test = next(splitter.split(
         frame[FEATURES], frame["default"], groups=frame["network_id"]
     ))
-    xtr, xte = frame.iloc[train][FEATURES], frame.iloc[test][FEATURES]
-    ytr, yte = frame.iloc[train]["default"], frame.iloc[test]["default"]
-    if ytr.nunique() != 2 or yte.nunique() != 2:
-        raise RuntimeError("Generated sample lacks both classes in split")
+    development = frame.iloc[trainval]
+    internal = GroupShuffleSplit(
+        n_splits=1, test_size=.25, random_state=seed + 1
+    )
+    itrain, ival = next(internal.split(
+        development[FEATURES], development["default"],
+        groups=development["network_id"]
+    ))
+    train, validation = trainval[itrain], trainval[ival]
+    train_ids = set(frame.iloc[train].network_id)
+    validation_ids = set(frame.iloc[validation].network_id)
+    test_ids = set(frame.iloc[test].network_id)
+    if train_ids & validation_ids or train_ids & test_ids or validation_ids & test_ids:
+        raise AssertionError("Network-level split leakage")
+    xtr, xval, xte = (
+        frame.iloc[train][FEATURES],
+        frame.iloc[validation][FEATURES],
+        frame.iloc[test][FEATURES],
+    )
+    ytr, yval, yte = (
+        frame.iloc[train]["default"],
+        frame.iloc[validation]["default"],
+        frame.iloc[test]["default"],
+    )
+    if any(x.nunique() != 2 for x in (ytr, yval, yte)):
+        raise RuntimeError("Every split must contain both default classes")
     models = {
         "Regularized Logistic": make_pipeline(
             StandardScaler(), LogisticRegression(
@@ -92,24 +115,34 @@ def evaluate_out_of_network_prediction(
             min_samples_leaf=25, early_stopping=False
         ),
     }
-    scores, fitted = [], {}
+    metrics, probabilities, validation_auc = [], {}, {}
     for name, model in models.items():
         model.fit(xtr, ytr)
-        p = np.clip(model.predict_proba(xte)[:, 1], 1e-9, 1 - 1e-9)
-        fitted[name] = p
-        scores.append({
-            "model": name, "n_train": len(train), "n_test": len(test),
-            "train_networks": int(frame.iloc[train].network_id.nunique()),
-            "test_networks": int(frame.iloc[test].network_id.nunique()),
+        vprob = np.clip(model.predict_proba(xval)[:, 1], 1e-9, 1 - 1e-9)
+        probability = np.clip(model.predict_proba(xte)[:, 1], 1e-9, 1 - 1e-9)
+        probabilities[name] = probability
+        validation_auc[name] = float(roc_auc_score(yval, vprob))
+        metrics.append({
+            "model": name,
+            "n_train": len(train),
+            "n_validation": len(validation),
+            "n_test": len(test),
+            "train_networks": len(train_ids),
+            "validation_networks": len(validation_ids),
+            "test_networks": len(test_ids),
             "test_event_rate": float(yte.mean()),
-            "roc_auc": float(roc_auc_score(yte, p)),
-            "average_precision": float(average_precision_score(yte, p)),
-            "brier": float(brier_score_loss(yte, p)),
-            "log_loss": float(log_loss(yte, p)),
+            "validation_roc_auc": validation_auc[name],
+            "roc_auc": float(roc_auc_score(yte, probability)),
+            "average_precision": float(average_precision_score(yte, probability)),
+            "brier": float(brier_score_loss(yte, probability)),
+            "log_loss": float(log_loss(yte, probability)),
         })
-    summary = pd.DataFrame(scores).sort_values("roc_auc", ascending=False)
-    best_name = str(summary.iloc[0]["model"])
-    pred = fitted[best_name]
+    best_name = max(validation_auc, key=validation_auc.get)
+    summary = pd.DataFrame(metrics).sort_values(
+        "validation_roc_auc", ascending=False
+    )
+    summary["selected_on_validation"] = summary["model"] == best_name
+    pred = probabilities[best_name]
     calibration = pd.DataFrame({"y": yte.to_numpy(), "p": pred})
     calibration["bin"] = pd.qcut(
         calibration.p.rank(method="first"), q=8,
@@ -119,9 +152,8 @@ def evaluate_out_of_network_prediction(
         n=("y", "size"), observed_default_share=("y", "mean"),
         predicted_default_share=("p", "mean")
     ).reset_index()
-    best = models[best_name]
     pi = permutation_importance(
-        best, xte, yte, scoring="roc_auc", n_repeats=4,
+        models[best_name], xte, yte, scoring="roc_auc", n_repeats=4,
         random_state=seed, n_jobs=1
     )
     importance = pd.DataFrame({
@@ -132,18 +164,15 @@ def evaluate_out_of_network_prediction(
     split_audit = {
         "random_seed": seed,
         "unit_of_split": "entire independent synthetic network",
-        "train_network_ids": sorted(frame.iloc[train].network_id.unique().tolist()),
-        "test_network_ids": sorted(frame.iloc[test].network_id.unique().tolist()),
-        "best_model": best_name,
-        "selection_caution": (
-            "Selecting the best model by test AUC and reporting its "
-            "test-calibration on that same split can introduce selection "
-            "optimism. Add nested tuning and a separate untouched test "
-            "collection before publication."
+        "train_network_ids": sorted(train_ids),
+        "validation_network_ids": sorted(validation_ids),
+        "test_network_ids": sorted(test_ids),
+        "selected_model": best_name,
+        "selection_rule": "Maximize validation ROC AUC; untouched test for final evaluation",
+        "strict_test_note": (
+            "All model hyperparameters were fixed in source code before "
+            "the current benchmark. Cross-DGP transport remains untested."
         ),
-        "data_provenance": "All financial networks simulated, none observed.",
+        "data_provenance": "All liabilities/defaults simulated; no real banks.",
     }
-    assert not set(split_audit["train_network_ids"]).intersection(
-        split_audit["test_network_ids"]
-    )
     return summary, calibration, importance, split_audit

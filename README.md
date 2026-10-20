@@ -10,7 +10,7 @@
 
 **Innovative research theme:** *Can mechanism-consistent clearing simulations, network-aware validation, and cross-fitted Double Machine Learning distinguish robust policy scenarios from predictive and identification artifacts?*
 
-> **Evidence classification (essential):** This project currently uses **computer-generated financial networks** and an **independent synthetic partially linear causal experiment**. It does **not** include observed bilateral bank exposures, real policy interventions, clinically observed hospital networks, or identified macroprudential treatment effects. The existing GAT–GRU architecture is exploratory; benchmark scores reported below apply to separately validated **tabular network-feature models**, not automatically to the GNN. See [Data and Identification](docs/DATA_AND_IDENTIFICATION.md).
+> **Evidence classification (essential):** This project currently uses **computer-generated financial networks** and an **independent synthetic partially linear causal experiment**. It does **not** include observed bilateral bank exposures, real policy interventions, clinically observed hospital networks, or identified macroprudential treatment effects. The GAT–GRU has now been evaluated **separately on held-out synthetic networks**. Its predictive metrics are not a causal effect and cannot be directly compared with the tabular models, which use different independent graph draws. See [Data and Identification](docs/DATA_AND_IDENTIFICATION.md).
 
 **Research reading room:** [Scholarly Study (APA 7)](docs/RESEARCH_STUDY.md) · [Data Provenance and Identification](docs/DATA_AND_IDENTIFICATION.md) · [Healthcare Financing Extension](docs/HEALTH_ECONOMICS_TRANSLATION.md) · [Generated Research Report](reports/REPRODUCIBLE_RESULTS.md) · [GitHub Actions](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml)
 
@@ -22,7 +22,7 @@
 | **Macroprudential capital allocation** | Same-network and same-shock comparison: equal-budget injections to largest debtor vs. random node | Controlled **model** contrasts; no real policy effect |
 | **Computational Econometrics** | Cross-fitted orthogonal partially linear regression; known-truth Monte Carlo | Synthetic IID identification and estimator sensitivity |
 | **Predictive Machine Learning** | Logistic regression, Random Forest, boosted trees; split by independent **network**, with separate training, validation and untouched test sets | Out-of-network synthetic default prediction, no node-leakage |
-| **Graph neural architecture** | GAT plus temporal GRU, supervised risk output | Prototype model; independent validation separate from headline benchmark |
+| **Graph neural architecture** | GAT plus temporal GRU, tested on nine unseen synthetic networks | Held-out supervised ROC-AUC 0.9305; not causal inference or real-bank validation |
 | **Research integrity** | Reproducible seeds, convergence assertions, robust error handling, CI, audit logs | Transparent simulated evidence and uncertainty boundaries |
 
 ### Reproducible research workflow
@@ -46,6 +46,17 @@ flowchart LR
 
 The new pipeline runs entirely with a fixed seed and writes both numerical tables and figures. Each figure is labeled **synthetic** and is generated from the actual code rather than hand-written metrics.
 
+### Independently reproduced synthetic findings
+
+| Computational experiment | Executed result | Scientific interpretation |
+|---|---|---|
+| 140 financial network draws | Targeted-versus-random capital rule: mean reduction advantage **4.06** arbitrary units; whole-network bootstrap 95% CI **3.04–5.20** | A mechanistic comparison within a specified simulator, not an identified macroprudential effect |
+| Logistic default model, 28 untouched networks | ROC-AUC **0.9951**; n=560 simulated nodes | Near-perfect accuracy reflects a simplified deterministic simulator, not real-bank predictive validity |
+| GAT–GRU on nine unseen networks | ROC-AUC **0.9305**, PR-AUC **0.8137**, n=108 simulated nodes | Separate graph-data experiment; not a paired comparison with logistic prediction |
+| Ten IID synthetic DML replications | True parameter **−1.500**, mean cross-fit DML **−1.395**, naive OLS **−1.019**; nominal 95% interval coverage **7/10** | DML shows residual finite-sample bias and apparent undercoverage; ten replications cannot validate 95% coverage |
+
+**Research integrity:** high classification scores and positive simulated intervention effects should not be extrapolated. The predictive data-generating process is intentionally simple; model-selection uses validation networks and final evaluation uses untouched networks. The DML confidence intervals are not calibrated for correlated real financial networks.
+
 ![Paired network intervention comparison](reports/figures/figure_1_policy_interventions.png)
 *Figure 1. Unpaid-obligation distributions and the difference between equal-budget intervention rules across independently generated synthetic networks. **Not observed financial institutions.***
 
@@ -63,6 +74,9 @@ The new pipeline runs entirely with a fixed seed and writes both numerical table
 
 ![Illustrative network structure](reports/figures/figure_6_synthetic_network.png)
 *Figure 6. One directed synthetic network after a prescribed external-asset shock.*
+
+![GAT–GRU supervised risk prediction on independent simulated graphs](reports/gnn/gnn_out_of_network.png)
+*Figure 7. Graph neural model risk predictions and calibration on nine unseen synthetic networks. The treatment-prediction head is not trained; no network causal policy effect is estimated.*
 
 Numerical results, scenario counts, uncertainty intervals, model metrics and source declarations are regenerated into **[REPRODUCIBLE_RESULTS.md](reports/REPRODUCIBLE_RESULTS.md)** rather than inserted manually.
 
@@ -138,7 +152,15 @@ pip install streamlit
 streamlit run app/streamlit_app.py
 ```
 
-The PyTorch graph model is a separately maintained optional research prototype. Install full dependencies from `requirements.txt` to explore it. It is not silently substituted for a trained GNN benchmark in the main results.
+For the separately evaluated GAT–GRU architecture, install CPU PyTorch and run:
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+python -m src.research.gnn_benchmark --graphs 36 --nodes 12 --epochs 14 --output reports/gnn
+python -m pytest -q tests/test_gnn.py
+```
+
+Review [GNN validation](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/gnn-validation.yml). This is supervised synthetic risk prediction; its historical class name does not make the neural head a Double Machine Learning estimator.
 
 ## Output dictionary
 
@@ -151,7 +173,9 @@ The PyTorch graph model is a separately maintained optional research prototype. 
 | `reports/heldout_synthetic_calibration.csv` | Reliability summaries of selected synthetic predictive model |
 | `reports/heldout_permutation_reliance.csv` | Held-out permutation importance |
 | `reports/independent_dml_monte_carlo.csv` | Replicated IID known-truth DML experiments |
-| `reports/figures/` | Six figures generated in PNG and SVG |
+| `reports/figures/` | Six main figures generated in PNG and SVG |
+| `reports/gnn/gnn_heldout_metrics.json` | Validated separate synthetic-network GNN metrics |
+| `reports/gnn/gnn_out_of_network.png` | Seventh figure: GAT–GRU out-of-network calibration |
 
 **Reproducibility caveat:** Perfect reproduction assumes compatible versions of core dependencies; nonlinear tree fits can change slightly across library versions.
 

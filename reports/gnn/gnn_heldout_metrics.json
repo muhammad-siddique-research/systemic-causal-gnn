@@ -6,13 +6,9 @@
   "nodes_per_graph": 12,
   "epochs": 14,
   "seed": 20261020,
-  "torch_version": "2.14.1+cpu",
-  "numpy_version": "2.4.6",
-  "device": "cpu",
-  "deterministic_algorithms_requested": true,
-  "test_roc_auc": 0.9259259259259259,
-  "test_average_precision": 0.8205221081830383,
-  "test_brier": 0.1065643180082354,
+  "test_roc_auc": 0.9154092363968906,
+  "test_average_precision": 0.7707465463848631,
+  "test_brier": 0.10398002773495589,
   "test_default_share": 0.25,
   "caveat": "Independent synthetic test graphs, but no genuine observational network validation. Model treatment head is unused and untrained. Tabular baselines elsewhere in the repo use different draws, so their scores are not paired comparisons."
 }

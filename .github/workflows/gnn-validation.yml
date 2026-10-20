@@ -1,5 +1,11 @@
 name: Optional Graph Model Validation
 on:
+  push:
+    paths:
+      - 'src/research/gnn_benchmark.py'
+      - 'src/train_st_gnn.py'
+      - 'tests/test_gnn.py'
+      - '.github/workflows/gnn-validation.yml'
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,60 @@
+name: Reproducible Synthetic Network Research
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: systematic-financial-research-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    name: Research Validation (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install CPU analysis dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-core.txt
+      - name: Unit test clearing, DML and leakage boundaries
+        run: python -m pytest -q tests/test_research.py
+      - name: Reproduce numeric reports and six simulation figures
+        run: python -m src.research.pipeline --networks 140 --dml-reps 10 --out reports
+      - name: Confirm explicit synthetic source declarations
+        run: |
+          python -c "import json;from pathlib import Path;p=json.loads(Path('reports/research_provenance.json').read_text());assert p['sample_source'].startswith('ENTIRELY COMPUTER-GENERATED');assert 'not' in p['prediction'].lower() or 'synthetic' in p['prediction'].lower()"
+      - name: Preserve analysis outputs for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-network-research-py${{ matrix.python-version }}
+          path: reports/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish independently generated, labeled research figures
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.python-version == '3.12' && github.actor != 'github-actions[bot]' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish reproducible synthetic network research outputs [skip ci]"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi

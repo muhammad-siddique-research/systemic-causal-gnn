@@ -58,6 +58,7 @@ def evaluate_gnn(count=48, nodes=14, epochs=24,
                  seed=20261020, output=Path("reports/gnn")):
     torch.set_num_threads(1)
     torch.manual_seed(seed)
+    torch.use_deterministic_algorithms(True)
     examples = generate_graphs(count, nodes, seed=seed)
     ids = np.random.default_rng(seed+1).permutation(count)
     cutoff = int(.75*count)
@@ -96,6 +97,8 @@ def evaluate_gnn(count=48, nodes=14, epochs=24,
         "purpose": "Out-of-network supervised risk prediction, NOT causal DML",
         "train_networks": len(train), "test_networks": len(test),
         "nodes_per_graph": nodes, "epochs": epochs, "seed": seed,
+        "torch_version": torch.__version__, "numpy_version": np.__version__,
+        "device": "cpu", "deterministic_algorithms_requested": True,
         "test_roc_auc": float(roc_auc_score(y, p)),
         "test_average_precision": float(average_precision_score(y, p)),
         "test_brier": float(brier_score_loss(y, p)),

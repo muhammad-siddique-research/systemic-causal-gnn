@@ -37,7 +37,7 @@ Report the sign and 95% interval of the paired difference whether positive, nega
 
 Each synthetic network is one sampling cluster. A random node split would leak connected observations and correlated shocks. We use `GroupShuffleSplit` by **network_id** so no node from one fabricated network appears in both sets.
 
-Models include regularized logistic regression, random forest and histogram gradient-boosted trees. Report ROC-AUC, average precision, Brier score, log loss, and calibration. Permutation importance describes predictive model reliance; it cannot identify causal drivers of default. Selecting the best-performing method on the same test split used to report performance introduces selection optimism. A separate development set and untouched test set would strengthen research credibility.
+Models include regularized logistic regression, random forest and histogram gradient-boosted trees. Report ROC-AUC, average precision, Brier score, log loss, and calibration. Permutation importance describes predictive model reliance; it cannot identify causal drivers of default. The updated design partitions **entire networks** into training, validation, and untouched test sets. Validation ROC-AUC selects the model; test networks provide final reported metrics and calibration. Hyperparameters are fixed, and cross-DGP transport remains untested.
 
 The existing `SpatioTemporalCausalGNN` architecture is a GAT + GRU with a default head and a treatment-regression head, but those heads are *not* a causal identification theorem. Do not interpret predictions from an in-sample network as externally validated default forecasts.
 

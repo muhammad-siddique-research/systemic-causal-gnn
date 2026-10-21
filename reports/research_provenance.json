@@ -7,7 +7,7 @@
   "GNN_status": "Original architecture exploratory; not in the benchmark tables",
   "policy_ci": {
     "n_networks": 140,
-    "mean_paired_difference": 4.062423387902554,
+    "mean_paired_difference": 4.062423387902556,
     "ci_95_percentile_lower": 3.0377283275146363,
     "ci_95_percentile_upper": 5.196823115142432,
     "bootstrap_iterations": 1000,

@@ -101,11 +101,11 @@ Numerical results, scenario counts, uncertainty intervals, model metrics and sou
 
 ### Clearing fixed point
 
-Let $L_{ij}\ge 0$ denote the liability of debtor $i$ to creditor $j$, $e_i$ its nonnegative external assets, and $\bar{p}_i$ its total promised payments. Relative liability weights are defined as $\Pi_{ij}=L_{ij}/\bar{p}_i$ when $\bar{p}_i>0$ (and zero otherwise).
+Let $`L_{ij}\ge 0`$ denote the liability of debtor $`i`$ to creditor $`j`$, $`e_i`$ its nonnegative external assets, and $`\bar{p}_i`$ its total promised payments. Relative liability weights are defined as $`\Pi_{ij}=L_{ij}/\bar{p}_i`$ when $`\bar{p}_i>0`$ (and zero otherwise).
 
 The **greatest Eisenberg–Noe clearing fixed point** solves
 
-$$
+```math
 p_{i}^{\star}
 = \min\biggl\{
     \bar{p}_{i},
@@ -114,56 +114,51 @@ p_{i}^{\star}
     \biggr\}
   \biggr\},
 \qquad i=1,\ldots,N.
-$$
+```
+The algorithm initializes $`p_{i}^{(0)}=\bar{p}_{i}`$, iterates downward to convergence, and reports aggregate unpaid obligations
 
-The algorithm initializes $p_{i}^{(0)}=\bar{p}_{i}$, iterates downward to convergence, and reports aggregate unpaid obligations
-
-$$
+```math
 \mathcal{L}(L,e)=\sum_{i=1}^{N}\bigl(\bar{p}_{i}-p_{i}^{\star}\bigr).
-$$
-
+```
 It computes a **greatest** fixed point; uniqueness is not asserted for arbitrary nonregular liability systems (Eisenberg & Noe, 2001).
 
 ### Policy comparison as a controlled simulation
 
-For independently drawn synthetic network $b$, compare the unpaid-obligation functions $\mathcal{L}_{b}(0)$ (no capital injection), $\mathcal{L}_{b}(T)$ (largest debtor), and $\mathcal{L}_{b}(R)$ (random institution). Hold the liabilities, initial assets, shock, and **nominal injection budget** fixed within each paired comparison.
+For independently drawn synthetic network $`b`$, compare the unpaid-obligation functions $`\mathcal{L}_{b}(0)`$ (no capital injection), $`\mathcal{L}_{b}(T)`$ (largest debtor), and $`\mathcal{L}_{b}(R)`$ (random institution). Hold the liabilities, initial assets, shock, and **nominal injection budget** fixed within each paired comparison.
 
 The paired advantage of targeting over random allocation is
 
-$$
+```math
 \Delta_b
 = \bigl[\mathcal{L}_{b}(0)-\mathcal{L}_{b}(T)\bigr]
 - \bigl[\mathcal{L}_{b}(0)-\mathcal{L}_{b}(R)\bigr]
 = \mathcal{L}_{b}(R)-\mathcal{L}_{b}(T).
-$$
-
-Report the across-network mean $\bar{\Delta}=B^{-1}\sum_{b=1}^{B}\Delta_b$, default counts, and percentile bootstrap confidence intervals **resampling whole independent networks**. These are mechanism-based **simulation contrasts**, not identified effects of real-world policy interventions.
+```
+Report the across-network mean $`\bar{\Delta}=B^{-1}\sum_{b=1}^{B}\Delta_b`$, default counts, and percentile bootstrap confidence intervals **resampling whole independent networks**. These are mechanism-based **simulation contrasts**, not identified effects of real-world policy interventions.
 
 ### Cross-fitted Double Machine Learning
 
 For a separate, independently generated *IID* partially linear data-generating process (DGP), define
 
-$$
+```math
 \begin{aligned}
 Y_i &= \theta_0 D_i + g_0(X_i) + \varepsilon_i,\\
 D_i &= m_0(X_i) + v_i.
 \end{aligned}
-$$
+```
+The nuisance functions are $`m_0(X)=\mathbb{E}[D\mid X]`$ and $`\ell_0(X)=\mathbb{E}[Y\mid X]`$. The **cross-fitted Neyman-orthogonal moment** is
 
-The nuisance functions are $m_0(X)=\mathbb{E}[D\mid X]$ and $\ell_0(X)=\mathbb{E}[Y\mid X]$. The **cross-fitted Neyman-orthogonal moment** is
-
-$$
+```math
 \frac{1}{n}\sum_{i=1}^{n}
 \bigl[D_i-\widehat{m}_{-k(i)}(X_i)\bigr]
 \Bigl(
     Y_i-\widehat{\ell}_{-k(i)}(X_i)
     -\theta\bigl[D_i-\widehat{m}_{-k(i)}(X_i)\bigr]
 \Bigr)=0.
-$$
+```
+Here $`k(i)`$ is the fold containing observation $`i`$; nuisance estimators with subscript $`-k(i)`$ are trained on the *other* folds. Equivalently, the residual-on-residual DML coefficient is
 
-Here $k(i)$ is the fold containing observation $i$; nuisance estimators with subscript $-k(i)$ are trained on the *other* folds. Equivalently, the residual-on-residual DML coefficient is
-
-$$
+```math
 \widehat{\theta}_{\mathrm{DML}}
 =
 \frac{
@@ -174,9 +169,8 @@ $$
 \sum_{i=1}^{n}
 \bigl[D_i-\widehat{m}_{-k(i)}(X_i)\bigr]^{2}
 }.
-$$
-
-The outcome nuisance is $\ell_0(X)=\mathbb{E}[Y\mid X]$, **not** $g_0(X)$. Under the implemented partially linear synthetic DGP, the orthogonality argument concerns the structural parameter $\theta_0$. This exercise is **not an identified network-spillover effect** and its IID uncertainty calculations should not be applied uncritically to correlated financial networks (Chernozhukov et al., 2018).
+```
+The outcome nuisance is $`\ell_0(X)=\mathbb{E}[Y\mid X]`$, **not** $`g_0(X)`$. Under the implemented partially linear synthetic DGP, the orthogonality argument concerns the structural parameter $`\theta_0`$. This exercise is **not an identified network-spillover effect** and its IID uncertainty calculations should not be applied uncritically to correlated financial networks (Chernozhukov et al., 2018).
 
 ### Prediction and graph learning
 

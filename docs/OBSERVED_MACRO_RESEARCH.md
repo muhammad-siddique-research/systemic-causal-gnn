@@ -26,10 +26,9 @@ Record each source's original URL, file SHA-256, calendar coverage, download dat
 
 Define an aggregate corporate credit-spread proxy S_t = BAA_t − GS10_t (percentage points). The target is S_(t+1). Fit on the development period:
 
-$$
+```math
 S_{t+1}=\beta_0+\beta_1 S_t+\beta_2 U_t+\beta_3 F_t+\beta_4\,100\Delta\log(IP_t)+\epsilon_{t+1},
-$$
-
+```
 where U_t is unemployment, F_t the federal funds rate, and IP_t industrial production. This is a **descriptive time-series linear projection**. Macroeconomic variables are potentially jointly determined with credit spreads, so fitted slopes are not identified monetary policy effects.
 
 1. Validate monthly timestamps, reject duplicate months and unannounced interpolation; align the five official series.
@@ -42,10 +41,9 @@ where U_t is unemployment, F_t the federal funds rate, and IP_t industrial produ
 
 For loss differential d_t = e²_candidate,t − e²_persistence,t, report:
 
-$$
+```math
 \bar d \pm 1.96\,\widehat{\mathrm{SE}}_{HAC}(\bar d).
-$$
-
+```
 Negative values favor the candidate model. Three HAC lags are a transparent initial choice, not an optimized bandwidth. Assess structural breaks, forecast origin dependence and alternate lag windows before scholarly submission.
 
 ## Crucial historical-vintage limitation

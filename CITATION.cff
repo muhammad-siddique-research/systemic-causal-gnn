@@ -1,13 +1,13 @@
 cff-version: 1.2.0
 message: "Please cite this research software and its relevant theoretical references."
 type: software
-title: "Network Fragility Under Stress: Financial Contagion, Graph Machine Learning, and Cross-Fitted Econometrics"
+title: "Network Fragility and Macroprudential Resilience: Mechanism-Consistent Clearing, Graph Machine Learning, and Cross-Fitted Econometrics"
 authors:
   - family-names: Siddique
     given-names: Muhammad
 repository-code: "https://github.com/muhammad-siddique-research/systemic-causal-gnn"
 url: "https://github.com/muhammad-siddique-research/systemic-causal-gnn"
-version: 0.2.0
+version: 0.3.0
 date-released: "2026-10-20"
 license: MIT
 keywords:
@@ -16,4 +16,4 @@ keywords:
   - double machine learning
   - graph neural networks
   - simulation-based stress tests
-abstract: "Simulation-only research engineering benchmark for greatest-clearing fixed points, paired capital interventions, out-of-network default prediction and separate known-truth Double ML estimation; no observed bank-data inference claimed."
+abstract: "Simulation-only research engineering benchmark for greatest-clearing fixed points, paired capital interventions, out-of-network default prediction and separate known-truth Double ML estimation; includes an independent optional public macroeconomic forecasting protocol, not identified interbank exposure inference."

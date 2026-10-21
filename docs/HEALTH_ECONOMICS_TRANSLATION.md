@@ -34,14 +34,14 @@ Data are subject to availability, variable definitions, review/IRB as appropriat
 
 ## Suggested Econometric design
 
-Construct a hospital–year panel \(i,t\) after validating mergers, system affiliation, accounting changes, provider IDs, deflators and payer mix. A baseline descriptive model:
+Construct a hospital–year panel $i,t$ after validating mergers, system affiliation, accounting changes, provider IDs, deflators and payer mix. A baseline descriptive model:
 
 $$
 Y_{it} = \alpha_i + \gamma_t +
 \beta S_{i,t-1} + X_{it}'\delta + \varepsilon_{it},
 $$
 
-where \(Y_{it}\) is a **verified access or operational capacity outcome** and \(S_{i,t-1}\) is a *lagged, measured* financial-stress indicator. Hospital and year fixed effects remove time-invariant heterogeneity and national shocks, but do not make the stress coefficient causal.
+where $Y_{it}$ is a **verified access or operational capacity outcome** and $S_{i,t-1}$ is a *lagged, measured* financial-stress indicator. Hospital and year fixed effects remove time-invariant heterogeneity and national shocks, but do not make the stress coefficient causal.
 
 If an exogenous payer policy change with defensible comparison groups exists, consider staggered event-study / differences-in-differences methods with correct timing, anticipation checks, heterogeneous treatment effects, and clustering at the relevant market/provider-system level. Network interference invalidates off-the-shelf SUTVA; define exposure mappings, partial-interference clusters, and transparent spillover estimands.
 

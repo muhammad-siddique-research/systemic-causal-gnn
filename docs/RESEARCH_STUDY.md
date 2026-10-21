@@ -40,31 +40,36 @@ Recent literature further cautions against overclaiming novelty or direct causal
 
 ### 2.1 Directed obligations and the repayment operator
 
-Let \(L_{ij}\) denote the nonnegative payment owed by institution \(i\) to institution \(j\). Total promised payments are \(\bar p_i=\sum_jL_{ij}\), and \(\Pi_{ij}=L_{ij}/\bar p_i\) where \(\bar p_i>0\); rows with no liabilities are set to zero. For nonnegative external assets \(e_i\), the payment vector satisfies:
+Let $L_{ij}$ denote the nonnegative payment owed by institution $i$ to institution $j$. Total promised payments are $\bar p_i=\sum_jL_{ij}$, and $\Pi_{ij}=L_{ij}/\bar p_i$ where $\bar p_i>0$; rows with no liabilities are set to zero. For nonnegative external assets $e_i$, the payment vector satisfies:
 
 $$
-p^*=\min\{\bar p,\ \max[0,e+\Pi^\top p^*]\},
+\mathbf{p}^{\star}
+= \min\bigl\{
+    \bar{\mathbf{p}},
+    \max\bigl\{\mathbf{0},\,\mathbf{e}
+      + \Pi^{\mathsf{T}}\mathbf{p}^{\star}\bigr\}
+  \bigr\},
 $$
 
-where min and max apply elementwise. Starting at \(p^{(0)}=\bar p\), iteration toward a fixed point yields a **greatest clearing solution** for the modeled operator. Unique clearing depends on additional regularity conditions; the code checks convergence numerically instead of claiming general uniqueness (Eisenberg & Noe, 2001).
+where min and max apply elementwise. Starting at $p^{(0)}=\bar p$, iteration toward a fixed point yields a **greatest clearing solution** for the modeled operator. Unique clearing depends on additional regularity conditions; the code checks convergence numerically instead of claiming general uniqueness (Eisenberg & Noe, 2001).
 
 Compute the aggregate unpaid obligation:
 
 $$
-\mathcal{L}(L,e)=\sum_{i=1}^N(\bar p_i-p^*_i).
+\mathcal{L}(L,e)=\sum_{i=1}^{N}\bigl(\bar{p}_{i}-p_{i}^{\star}\bigr).
 $$
 
 This objective reflects unpaid simulated financial liabilities, not welfare, GDP, hospital output or household wellbeing. Bankruptcy liquidation costs and common-market fire sales are not modeled.
 
 ### 2.2 Synthetic network generator
 
-Directed edge membership is independently drawn as \(M_{ij}\sim\mathrm{Bernoulli}(\rho)\) for \(i\ne j\). Positive obligations are Gamma distributed conditional on an edge; baseline external assets are a function of total obligations and an independent positive asset component. Institution-specific exposures modulate a common stress amplitude.
+Directed edge membership is independently drawn as $M_{ij}\sim\mathrm{Bernoulli}(\rho)$ for $i\ne j$. Positive obligations are Gamma distributed conditional on an edge; baseline external assets are a function of total obligations and an independent positive asset component. Institution-specific exposures modulate a common stress amplitude.
 
 These choices are **arbitrary simulator parameters** and are not calibrated to real U.S. bank leverage, bilateral payment networks, FDIC failures, emergency lending or actual dollar units. Sensitivity checks should vary density, shock size and asset distributions.
 
 ### 2.3 Paired modeled interventions
 
-For network replicate \(b\), let \(\mathcal{L}_b(0)\) denote loss after an identical prescribed shock and no injection; let \(\mathcal{L}_b(T)\) denote loss when a fixed budget is injected into the largest debtor by pre-shock promised obligations; let \(\mathcal{L}_b(R)\) denote loss with equal capital allocated to a random debtor.
+For network replicate $b$, let $\mathcal{L}_b(0)$ denote loss after an identical prescribed shock and no injection; let $\mathcal{L}_b(T)$ denote loss when a fixed budget is injected into the largest debtor by pre-shock promised obligations; let $\mathcal{L}_b(R)$ denote loss with equal capital allocated to a random debtor.
 
 Define the paired contrast:
 
@@ -76,7 +81,7 @@ $$
 =\mathcal{L}_b(R)-\mathcal{L}_b(T).
 $$
 
-The mean \(\bar\Delta=B^{-1}\sum_b\Delta_b\) is a **simulator-conditioned policy-rule comparison**, not an observed treatment effect. We retain the sign whether it supports, rejects or is inconclusive for the targeted heuristic. Resample *entire independent networks* for a percentile bootstrap interval. Resampling individual nodes as IID observations would ignore network interference.
+The mean $\bar\Delta=B^{-1}\sum_b\Delta_b$ is a **simulator-conditioned policy-rule comparison**, not an observed treatment effect. We retain the sign whether it supports, rejects or is inconclusive for the targeted heuristic. Resample *entire independent networks* for a percentile bootstrap interval. Resampling individual nodes as IID observations would ignore network interference.
 
 Monotonicity is expected for added external financial resources under the specified fixed clearing operator. The code asserts that neither equal-budget injection produces a greater modeled aggregate shortfall than the baseline.
 
@@ -95,37 +100,61 @@ Permutation reliance on the held-out set describes predictive feature dependence
 A separate data-generating process constructs independent observations with:
 
 $$
-D_i=m_0(X_i)+V_i,\qquad
-Y_i=\theta_0D_i+g_0(X_i)+U_i,
+\begin{aligned}
+D_i &= m_0(X_i)+V_i,\\
+Y_i &= \theta_0 D_i+g_0(X_i)+U_i.
+\end{aligned}
 $$
 
-and known synthetic \(\theta_0=-1.5\). Both \(m_0\) and \(g_0\) include nonlinear covariate functions. Naive unadjusted OLS on \(Y\) and \(D\) is expected to suffer omitted-variable confounding in this design.
+and known synthetic $\theta_0=-1.5$. Both $m_0$ and $g_0$ include nonlinear covariate functions. Naive unadjusted OLS on $Y$ and $D$ is expected to suffer omitted-variable confounding in this design.
 
 Correctly defined nuisance regression targets are:
 
 $$
-\ell_0(X_i)=E[Y_i\mid X_i],\qquad m_0(X_i)=E[D_i\mid X_i].
+\ell_0(X_i)=\mathbb{E}[Y_i\mid X_i],
+\qquad m_0(X_i)=\mathbb{E}[D_i\mid X_i].
 $$
 
 Using out-of-fold estimates, solve:
 
 $$
-\hat\theta =
-\frac{\sum_i (D_i-\hat m_{-k(i)}(X_i))
-                (Y_i-\hat\ell_{-k(i)}(X_i))}
-{\sum_i (D_i-\hat m_{-k(i)}(X_i))^2}.
+\widehat{\theta}_{\mathrm{DML}}
+=
+\frac{
+  \sum_{i=1}^{n}
+  \bigl[D_i-\widehat{m}_{-k(i)}(X_i)\bigr]\,
+  \bigl[Y_i-\widehat{\ell}_{-k(i)}(X_i)\bigr]
+}{
+  \sum_{i=1}^{n}\bigl[D_i-\widehat{m}_{-k(i)}(X_i)\bigr]^2
+}.
 $$
 
-The numerator and denominator arise from a Neyman-orthogonal moment (Chernozhukov et al., 2018). A first-order IID influence-function approximation gives:
+The numerator and denominator arise from a Neyman-orthogonal moment (Chernozhukov et al., 2018). A first-order influence-function variance approximation under **independent synthetic observations** defines the out-of-fold residuals
 
 $$
-\widehat{\mathrm{SE}}(\hat\theta)
-=\sqrt{\frac{n^{-1}\sum_i\hat\psi_i^2}
-             {n\{\mathbb E_n[(D_i-\hat m_i)^2]\}^2}},
+\begin{aligned}
+\widehat{v}_i
+  &= D_i-\widehat{m}_{-k(i)}(X_i),\\
+\widehat{u}_i
+  &= Y_i-\widehat{\ell}_{-k(i)}(X_i),\\
+\widehat{\psi}_i
+  &= \widehat{v}_i
+     \bigl(\widehat{u}_i-\widehat{\theta}_{\mathrm{DML}}\widehat{v}_i\bigr).
+\end{aligned}
 $$
 
-with \(\hat\psi_i=(D_i-\hat m_i)
-[(Y_i-\hat\ell_i)-\hat\theta(D_i-\hat m_i)]\). The simulation records coefficient bias and nominal interval coverage over independent replications.
+The corresponding plug-in standard error can be written
+
+$$
+\widehat{\operatorname{SE}}\bigl(\widehat{\theta}_{\mathrm{DML}}\bigr)
+=
+\sqrt{
+\frac{n^{-1}\sum_{i=1}^{n}\widehat{\psi}_i^{\,2}}
+{n\bigl(n^{-1}\sum_{i=1}^{n}\widehat{v}_i^{\,2}\bigr)^2}
+}.
+$$
+
+This is conditional on the experiment's IID approximation; it is **not** valid automatically for correlated nodes within interbank networks. The Monte Carlo records estimated bias and nominal interval coverage across independent simulated repetitions.
 
 **Critical separation:** This known-truth DML exercise is not DML applied to the financial clearing network. Its IID observations lack network interference; nominal standard errors and orthogonality theory do **not** establish identification in macroprudential intervention data.
 

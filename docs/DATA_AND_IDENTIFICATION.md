@@ -15,7 +15,7 @@ There is **no observed interbank bilateral obligation dataset** in this reposito
 
 ## Financial network source and simulator
 
-For each network scenario, generate a directed Bernoulli adjacency mask \(M_{ij}\) with \(M_{ii}=0\). If a link exists, liability \(L_{ij}\) is a Gamma random draw; choose nonnegative baseline external assets with a positive component associated with each node's obligations plus an independent Gamma component. Each synthetic node receives a shock-vulnerability parameter. All magnitudes are in **arbitrary units**, not U.S. dollars.
+For each network scenario, generate a directed Bernoulli adjacency mask $M_{ij}$ with $M_{ii}=0$. If a link exists, liability $L_{ij}$ is a Gamma random draw; choose nonnegative baseline external assets with a positive component associated with each node's obligations plus an independent Gamma component. Each synthetic node receives a shock-vulnerability parameter. All magnitudes are in **arbitrary units**, not U.S. dollars.
 
 The observed quantity within the model is the result of iterative, greatest-fixed-point Eisenberg–Noe clearing. The original article proves existence and uniqueness only under appropriate network regularity. The implementation asserts convergence, validates nonnegative inputs, and does not report a fictitious uniqueness theorem.
 
@@ -23,13 +23,13 @@ The observed quantity within the model is the result of iterative, greatest-fixe
 
 ## Cross-fitted causal-estimator exercise
 
-The DML Monte Carlo experiment generates \((X_i,D_i,Y_i)\) with a known parameter in a *synthetic IID* partially linear model. A nonlinear propensity \(m_0(X)\) confounds the continuous treatment, so naive unadjusted OLS can be biased. Five-fold honest predictions from training folds provide residualized exposures and outcomes, followed by estimation with an orthogonal score.
+The DML Monte Carlo experiment generates $(X_i,D_i,Y_i)$ with a known parameter in a *synthetic IID* partially linear model. A nonlinear propensity $m_0(X)$ confounds the continuous treatment, so naive unadjusted OLS can be biased. Five-fold honest predictions from training folds provide residualized exposures and outcomes, followed by estimation with an orthogonal score.
 
-DML uses \(E[Y\mid X]\), not \(g_0(X)\), for the outcome nuisance estimate. Standard errors are an IID influence-function approximation. Network-based interference, shared systemic shocks, and real policy endogeneity are **not addressed**, so these results cannot be transferred to observed bank-level monetary policy without additional identification structure.
+DML uses $E[Y\mid X]$, not $g_0(X)$, for the outcome nuisance estimate. Standard errors are an IID influence-function approximation. Network-based interference, shared systemic shocks, and real policy endogeneity are **not addressed**, so these results cannot be transferred to observed bank-level monetary policy without additional identification structure.
 
 ## Paired policy comparison
 
-Within scenario \(b\), the liabilities, asset-shock exposure, injection budget, and initial resources are shared. One injects the budget into the institution with the largest **pre-shock** promised obligations; another into a uniformly chosen institution. Random comparison is random *within the model*, but not a real policy experiment. The bootstrap samples entire independent networks, not individual bank nodes.
+Within scenario $b$, the liabilities, asset-shock exposure, injection budget, and initial resources are shared. One injects the budget into the institution with the largest **pre-shock** promised obligations; another into a uniformly chosen institution. Random comparison is random *within the model*, but not a real policy experiment. The bootstrap samples entire independent networks, not individual bank nodes.
 
 Report the sign and 95% interval of the paired difference whether positive, negative, or indistinguishable from zero. There is no assumption that the largest debtor must be the optimal policy target.
 
@@ -43,7 +43,7 @@ The legacy-named `SpatioTemporalCausalGNN` is now evaluated on **separate traini
 
 ## Why a genuine dataset is harder than a public macroeconomic time series
 
-Federal Reserve financial-condition indexes and public call reports can offer genuine **aggregate financial stress or institution-level accounting series**. They do **not** reveal the exact bilateral obligations \(L_{ij}\) needed to reconstruct this clearing network. Fabricating an adjacency graph from correlations and labeling it an observed liabilities network would invalidate the research design.
+Federal Reserve financial-condition indexes and public call reports can offer genuine **aggregate financial stress or institution-level accounting series**. They do **not** reveal the exact bilateral obligations $L_{ij}$ needed to reconstruct this clearing network. Fabricating an adjacency graph from correlations and labeling it an observed liabilities network would invalidate the research design.
 
 Potential empirical extensions must start from a source-aware measurement map: verify date and institution coverage, disclose accounting units, characterize link measurement error, identify the economic treatment and compare against independent external outcomes. Without observed bilateral obligations, the responsible deliverable remains a **simulator validated against its own known properties**.
 

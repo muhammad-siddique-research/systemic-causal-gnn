@@ -24,6 +24,10 @@ This extends the independently generated network/GNN portfolio with an **econome
 
 The financial-contagion GNN simulation, the independent known-truth DML experiment, and the empirical aggregate credit-spread forecast have *different observation units and targets*. They are intentionally not collapsed into a fictitious single causal research study.
 
+**Interdisciplinary research alignment:** [Financial Network Economics × Health Economics × AI](docs/INTERDISCIPLINARY_RESEARCH_ALIGNMENT.md) · [Hospital financial resilience research extension](docs/HEALTH_ECONOMICS_TRANSLATION.md)
+
+**New macroprudential robustness module:** A **3 × 3 shock-severity and network-density stress surface** now tests equal-budget capital allocation across independent synthetic networks. It reports paired shortfall differences, **whole-network bootstrap 95% intervals**, and an explicitly labeled robustness figure. [Code](src/research/stress_surface.py) · [Replication tests](tests/test_stress_surface.py) · [Generated figure when validated](reports/stress_surface/figure_9_stress_surface.png). This is a *simulation sensitivity design*, not an identified effect of capital regulation.
+
 **Research reading room:** [Scholarly Study (APA 7)](docs/RESEARCH_STUDY.md) · [Data Provenance and Identification](docs/DATA_AND_IDENTIFICATION.md) · [Healthcare Financing Extension](docs/HEALTH_ECONOMICS_TRANSLATION.md) · [Observed U.S. Macro-Financial Extension](docs/OBSERVED_MACRO_RESEARCH.md) · [Generated Research Report](reports/REPRODUCIBLE_RESULTS.md) · [GitHub Actions](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml)
 
 ## Research at a glance

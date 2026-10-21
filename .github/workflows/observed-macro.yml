@@ -1,0 +1,56 @@
+name: Observed FRED Macro-Financial Study
+on:
+  push:
+    paths:
+      - 'src/research/observed_macro.py'
+      - 'scripts/download_fred.py'
+      - 'tests/test_observed_macro.py'
+      - '.github/workflows/observed-macro.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: observed-fred-main
+  cancel-in-progress: true
+
+jobs:
+  empirical:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install research dependencies
+        run: python -m pip install -r requirements-core.txt
+      - name: Verify offline fixture before using genuine source
+        run: python -m pytest -q tests/test_observed_macro.py
+      - name: Download official FRED monthly series
+        run: python scripts/download_fred.py --output-dir data/fred
+      - name: Run real-data chronological predictive research
+        run: python -m src.research.observed_macro --data-dir data/fred --output-dir reports/observed_macro
+      - name: Preserve actual downloaded source and outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: authenticated-by-origin-fred-download-research
+          path: |
+            data/fred/
+            reports/observed_macro/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish real-data aggregate forecasts and source hashes
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --mixed origin/main
+          git add reports/observed_macro/
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish genuine observed macro financial forecast outputs [skip ci]"
+            git push origin HEAD:main
+          fi

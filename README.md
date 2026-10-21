@@ -8,41 +8,41 @@
 ![Status](https://img.shields.io/badge/Evidence-Synthetic_benchmark-orange)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-**Innovative research theme:** *Can mechanism-consistent clearing simulations, network-aware validation, and cross-fitted Double Machine Learning distinguish robust policy scenarios from predictive and identification artifacts?*
+**Innovative Research Theme:** *Can mechanism-consistent clearing simulations, network-aware validation, and cross-fitted Double Machine Learning distinguish robust policy scenarios from predictive and identification artifacts?*
 
 > **Evidence classification (essential):** This project currently uses **computer-generated financial networks** and an **independent synthetic partially linear causal experiment**. It does **not** include observed bilateral bank exposures, real policy interventions, clinically observed hospital networks, or identified macroprudential treatment effects. The GAT–GRU has now been evaluated **separately on held-out synthetic networks**. Its predictive metrics are not a causal effect and cannot be directly compared with the tabular models, which use different independent graph draws. See [Data and Identification](docs/DATA_AND_IDENTIFICATION.md).
 
-## New empirical research extension: public U.S. macro-financial indicators
+## New Empirical Research Extension: public U.S. macro-Financial Indicators
 
-**Research title:** *Forecasting Credit-Market Stress in the United States: HAC-Robust Econometrics and Out-of-Time Machine Learning alongside Network Stress Simulation.*
+**Research Title:** *Forecasting Credit-Market Stress in the United States: HAC-Robust Econometrics and Out-of-Time Machine Learning alongside Network Stress Simulation.*
 
 This extends the independently generated network/GNN portfolio with an **econometrically distinct research task**: one-month-ahead forecast comparisons for the publicly observed corporate credit spread (FRED Moody's Baa yield minus GS10). The input series are BAA, GS10, UNRATE, INDPRO, and FEDFUNDS. The separate analysis uses chronological train–test validation, Newey–West/HAC inference, a naive persistence benchmark, regularized Ridge Regression, and histogram gradient-boosted trees. It reports forecast errors, temporal split dates, original-series links and input fingerprints.
 
 **Evidence boundary:** Monthly FRED values are genuinely observable U.S. aggregate economic statistics, **not bilateral bank liabilities**. They cannot identify contagion across institutions or validate the graph neural network's bank-default accuracy. The project uses current-revision data rather than vintage-specific historical releases; consequently even an observed-data run is a *retrospective forecast exercise*, not evidence of exactly what historical forecasters could have known.
 
-**Execution status:** Code and **invented offline CSV-fixture tests** are included. [Observed-data study protocol](docs/OBSERVED_MACRO_RESEARCH.md) · [Real-data analysis source](src/research/observed_macro.py) · [Source download script](scripts/download_fred.py) · [Separate FRED execution workflow](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/observed-macro.yml). **Do not cite real FRED numerical results until the workflow confirms a successful official download and exports audited outputs.**
+**Execution Status:** Code and **Invented Offline CSV-Fixture Tests** are included. [Observed-data study protocol](docs/OBSERVED_MACRO_RESEARCH.md) · [Real-data analysis source](src/research/observed_macro.py) · [Source download script](scripts/download_fred.py) · [Separate FRED execution workflow](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/observed-macro.yml). **Do not cite real FRED numerical results until the workflow confirms a successful official download and exports audited outputs.**
 
 The financial-contagion GNN simulation, the independent known-truth DML experiment, and the empirical aggregate credit-spread forecast have *different observation units and targets*. They are intentionally not collapsed into a fictitious single causal research study.
 
-**Interdisciplinary research alignment:** [Financial Network Economics × Health Economics × AI](docs/INTERDISCIPLINARY_RESEARCH_ALIGNMENT.md) · [Hospital financial resilience research extension](docs/HEALTH_ECONOMICS_TRANSLATION.md)
+**Interdisciplinary Research Alignment:** [Financial Network Economics × Health Economics × AI](docs/INTERDISCIPLINARY_RESEARCH_ALIGNMENT.md) · [Hospital financial resilience research extension](docs/HEALTH_ECONOMICS_TRANSLATION.md)
 
-**New macroprudential robustness module:** A **3 × 3 shock-severity and network-density stress surface** now tests equal-budget capital allocation across independent synthetic networks. It reports paired shortfall differences, **whole-network bootstrap 95% intervals**, and an explicitly labeled robustness figure. [Code](src/research/stress_surface.py) · [Replication tests](tests/test_stress_surface.py) · [Generated figure when validated](reports/stress_surface/figure_9_stress_surface.png). This is a *simulation sensitivity design*, not an identified effect of capital regulation.
+**New Macroprudential Robustness Module:** A **3 × 3 Shock-Severity and Network-Density Stress Surface** now tests equal-budget capital allocation across independent synthetic networks. It reports paired shortfall differences, **whole-network bootstrap 95% intervals**, and an explicitly labeled robustness figure. [Code](src/research/stress_surface.py) · [Replication tests](tests/test_stress_surface.py) · [Generated figure when validated](reports/stress_surface/figure_9_stress_surface.png). This is a *simulation sensitivity design*, not an identified effect of capital regulation.
 
 **Research reading room:** [Scholarly Study (APA 7)](docs/RESEARCH_STUDY.md) · [Data Provenance and Identification](docs/DATA_AND_IDENTIFICATION.md) · [Healthcare Financing Extension](docs/HEALTH_ECONOMICS_TRANSLATION.md) · [Observed U.S. Macro-Financial Extension](docs/OBSERVED_MACRO_RESEARCH.md) · [Generated Research Report](reports/REPRODUCIBLE_RESULTS.md) · [GitHub Actions](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml)
 
-## Research at a glance
+## Research at a Glance
 
 | Research component | Implemented approach | What is actually evidenced |
 |---|---|---|
 | **Financial clearing and network effects** | Directed liabilities and Eisenberg–Noe greatest clearing fixed point | Numerical properties of the simulated mechanism |
-| **Macroprudential capital allocation** | Same-network and same-shock comparison: equal-budget injections to largest debtor vs. random node | Controlled **model** contrasts; no real policy effect |
+| **Macroprudential Capital Allocation** | Same-network and same-shock comparison: equal-budget injections to largest debtor vs. random node | Controlled **model** contrasts; no real policy effect |
 | **Computational Econometrics** | Cross-fitted orthogonal partially linear regression; known-truth Monte Carlo | Synthetic IID identification and estimator sensitivity |
 | **Predictive Machine Learning** | Logistic regression, Random Forest, boosted trees; split by independent **network**, with separate training, validation and untouched test sets | Out-of-network synthetic default prediction, no node-leakage |
 | **Graph neural architecture** | GAT plus temporal GRU, tested on nine unseen synthetic networks | Held-out metrics published in `reports/gnn/gnn_heldout_metrics.json`; not causal or real-bank evidence |
 | **Research integrity** | Reproducible seeds, convergence assertions, robust error handling, CI, audit logs | Transparent simulated evidence and uncertainty boundaries |
-| **Observed U.S. time-series extension** | Official FRED macro indicators, next-month credit spreads, HAC projection and chronological ML benchmark | Standalone aggregate empirical workflow; **not** evidence of real network edges or causal stress propagation |
+| **Observed U.S. time-series Extension** | Official FRED macro indicators, next-month credit spreads, HAC projection and chronological ML benchmark | Standalone aggregate empirical workflow; **not** evidence of real network edges or causal stress propagation |
 
-### Reproducible research workflow
+### Reproducible Research Workflow
 
 ```mermaid
 flowchart LR
@@ -59,20 +59,20 @@ flowchart LR
     J --> K
 ```
 
-## Results and scientific figures
+## Results and Scientific Figures
 
 The new pipeline runs entirely with a fixed seed and writes both numerical tables and figures. Each figure is labeled **synthetic** and is generated from the actual code rather than hand-written metrics.
 
-### Independently reproduced synthetic findings
+### Independently Reproduced Synthetic Findings
 
-| Computational experiment | Executed result | Scientific interpretation |
+| Computational Experiment | Executed Result | Scientific Interpretation |
 |---|---|---|
 | 140 financial network draws | Targeted-versus-random capital rule: mean reduction advantage **4.06** arbitrary units; whole-network bootstrap 95% CI **3.04–5.20** | A mechanistic comparison within a specified simulator, not an identified macroprudential effect |
 | Logistic default model, 28 untouched networks | ROC-AUC **0.9951**; n=560 simulated nodes | Near-perfect accuracy reflects a simplified deterministic simulator, not real-bank predictive validity |
-| GAT–GRU on nine unseen networks | ROC-AUC and PR-AUC published in the **versioned GNN metrics JSON**, n=108 simulated nodes | Separate graph-data experiment; not a paired comparison with logistic prediction |
+| GAT–GRU on nine unseen networks | ROC-AUC and PR-AUC published in the **Versioned GNN metrics JSON**, n=108 simulated nodes | Separate graph-data experiment; not a paired comparison with logistic prediction |
 | Ten IID synthetic DML replications | True parameter **−1.500**, mean cross-fit DML **−1.395**, naive OLS **−1.019**; nominal 95% interval coverage **7/10** | DML shows residual finite-sample bias and apparent undercoverage; ten replications cannot validate 95% coverage |
 
-**Research integrity:** high classification scores and positive simulated intervention effects should not be extrapolated. The predictive data-generating process is intentionally simple; model-selection uses validation networks and final evaluation uses untouched networks. The DML confidence intervals are not calibrated for correlated real financial networks.
+**Research Integrity:** high classification scores and positive simulated intervention effects should not be extrapolated. The predictive data-generating process is intentionally simple; model-selection uses validation networks and final evaluation uses untouched networks. The DML confidence intervals are not calibrated for correlated real financial networks.
 
 ![Paired network intervention comparison](reports/figures/figure_1_policy_interventions.png)
 *Figure 1. Unpaid-obligation distributions and the difference between equal-budget intervention rules across independently generated synthetic networks. **Not observed financial institutions.***
@@ -97,13 +97,13 @@ The new pipeline runs entirely with a fixed seed and writes both numerical table
 
 Numerical results, scenario counts, uncertainty intervals, model metrics and source declarations are regenerated into **[REPRODUCIBLE_RESULTS.md](reports/REPRODUCIBLE_RESULTS.md)** rather than inserted manually.
 
-## Econometric and computational methodology
+## Econometric and Computational Methodology
 
-### Clearing fixed point
+### Clearing Fixed Point
 
 Let $`L_{ij}\ge 0`$ denote the liability of debtor $`i`$ to creditor $`j`$, $`e_i`$ its nonnegative external assets, and $`\bar{p}_i`$ its total promised payments. Relative liability weights are defined as $`\Pi_{ij}=L_{ij}/\bar{p}_i`$ when $`\bar{p}_i>0`$ (and zero otherwise).
 
-The **greatest Eisenberg–Noe clearing fixed point** solves
+The **Greatest Eisenberg–Noe Clearing Fixed Point** solves
 
 ```math
 p_{i}^{\star}
@@ -120,9 +120,9 @@ The algorithm initializes $`p_{i}^{(0)}=\bar{p}_{i}`$, iterates downward to conv
 ```math
 \mathcal{L}(L,e)=\sum_{i=1}^{N}\bigl(\bar{p}_{i}-p_{i}^{\star}\bigr).
 ```
-It computes a **greatest** fixed point; uniqueness is not asserted for arbitrary nonregular liability systems (Eisenberg & Noe, 2001).
+It computes a **Greatest** fixed point; uniqueness is not asserted for arbitrary nonregular liability systems (Eisenberg & Noe, 2001).
 
-### Policy comparison as a controlled simulation
+### Policy Comparison as a Controlled Simulation
 
 For independently drawn synthetic network $`b`$, compare the unpaid-obligation functions $`\mathcal{L}_{b}(0)`$ (no capital injection), $`\mathcal{L}_{b}(T)`$ (largest debtor), and $`\mathcal{L}_{b}(R)`$ (random institution). Hold the liabilities, initial assets, shock, and **nominal injection budget** fixed within each paired comparison.
 
@@ -172,16 +172,16 @@ Here $`k(i)`$ is the fold containing observation $`i`$; nuisance estimators with
 ```
 The outcome nuisance is $`\ell_0(X)=\mathbb{E}[Y\mid X]`$, **not** $`g_0(X)`$. Under the implemented partially linear synthetic DGP, the orthogonality argument concerns the structural parameter $`\theta_0`$. This exercise is **not an identified network-spillover effect** and its IID uncertainty calculations should not be applied uncritically to correlated financial networks (Chernozhukov et al., 2018).
 
-### Prediction and graph learning
+### Prediction and Graph learning
 
 Default outcomes are generated by solving clearing networks. Node attributes are constructed *before* reading the default label. Logistic, Random Forest and boosted classification models are fitted on some independent networks and evaluated on entirely different networks. The original GAT–GRU graph model remains a distinct **exploratory architecture**, not a valid reason to label tabular metrics “GNN performance” (Veličković et al., 2018).
 
-### Hypotheses and scientific boundaries
+### Hypotheses and Scientific Boundaries
 
 - **H1:** Equal-budget capital allocation rules produce distinguishable synthetic clearing outcomes under a prespecified network/shock DGP; the direction of comparative performance is an empirical question within that simulator.
 - **H2:** Network-grouped predictive evaluation differs from evaluation that mixes nodes of one network across train and test, illustrating possible leakage.
 - **H3:** Under a correctly specified *independent-observation* synthetic DML design with known truth, orthogonal cross-fitting may reduce confounding bias relative to naive unadjusted OLS.
-- **H4 (planned, NOT tested):** Network financial stress may influence hospital liquidity, provider referral access and insurance payment disruption. Genuine provider financial and relationship data are required.
+- **H4 (planned, NOT Tested):** Network financial stress may influence hospital liquidity, provider referral access and insurance payment disruption. Genuine provider financial and relationship data are required.
 
 None is presented as a novel proved theorem or an observation about historical bank failures.
 
@@ -201,7 +201,7 @@ python -m src.research.pipeline --out reports --networks 140 --dml-reps 10
 python -m pytest -q tests/test_research.py
 ```
 
-For the **interactive, simulation-derived** dashboard:
+For the **Interactive, Simulation-derived** dashboard:
 
 ```bash
 pip install streamlit
@@ -218,7 +218,7 @@ python -m pytest -q tests/test_gnn.py
 
 Review [GNN validation](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/gnn-validation.yml). This is supervised synthetic risk prediction; its historical class name does not make the neural head a Double Machine Learning estimator.
 
-## Output dictionary
+## Output Dictionary
 
 | Path | Meaning |
 |---|---|
@@ -233,13 +233,13 @@ Review [GNN validation](https://github.com/muhammad-siddique-research/systemic-c
 | `reports/gnn/gnn_heldout_metrics.json` | Validated separate synthetic-network GNN metrics |
 | `reports/gnn/gnn_out_of_network.png` | Seventh figure: GAT–GRU out-of-network calibration |
 
-**Reproducibility caveat:** Perfect reproduction assumes compatible versions of core dependencies; nonlinear tree fits can change slightly across library versions.
+**Reproducibility Caveat:** Perfect reproduction assumes compatible versions of core dependencies; nonlinear tree fits can change slightly across library versions.
 
-## Research direction and Health Economics transfer
+## Research Direction and Health Economics Transfer
 
 Financial network clearing is **not** a hospital claims model. A valid extension could study **hospital financing fragility, delayed insurer reimbursements, and referral disruptions**, but would require genuine provider financial records, a validated provider-to-provider relationship graph, payer shocks, and a defensible evaluation design. [Read the testable translation protocol](docs/HEALTH_ECONOMICS_TRANSLATION.md).
 
-## Academic references (APA 7th edition)
+## References
 
 Acemoglu, D., Ozdaglar, A., & Tahbaz-Salehi, A. (2015). Systemic risk and stability in financial networks. *American Economic Review, 105*(2), 564–608. https://doi.org/10.1257/aer.20130456
 
@@ -253,8 +253,8 @@ Glasserman, P., & Young, H. P. (2016). Contagion in financial networks. *Journal
 
 Veličković, P., Cucurull, G., Casanova, A., Romero, A., Liò, P., & Bengio, Y. (2018). Graph attention networks. *International Conference on Learning Representations*. https://openreview.net/forum?id=rJXMpikCZ
 
-## Research integrity and attribution
+## Research Integrity and Attribution
 
 The original repo included illustrative graphical panels labeled as “empirical” and a benchmark table claiming specific GNN performance and near-unbiased policy effects. Those claims are **not reproducibly validated** by the historical code and are excluded from the revised reporting. Old files under `assets/` and `src/analytics/` are retained as legacy demonstrations, **not substantiating empirical evidence**. The updated reproducible reports are authoritative.
 
-This code is a **computational methods research portfolio**, not a peer-reviewed article, regulatory stress test, public-health policy evaluation, or substitute for observed financial exposures. MIT license retained.
+This code is a **Computational Methods Research Portfolio**, not a peer-reviewed article, regulatory stress test, public-health policy evaluation, or substitute for observed financial exposures. MIT license retained.

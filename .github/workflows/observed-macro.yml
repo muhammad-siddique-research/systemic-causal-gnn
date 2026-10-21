@@ -1,11 +1,5 @@
 name: Observed FRED Macro-Financial Study
 on:
-  push:
-    paths:
-      - 'src/research/observed_macro.py'
-      - 'scripts/download_fred.py'
-      - 'tests/test_observed_macro.py'
-      - '.github/workflows/observed-macro.yml'
   workflow_dispatch:
 
 permissions:

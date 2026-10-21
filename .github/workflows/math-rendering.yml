@@ -1,0 +1,32 @@
+name: GitHub Mathematical Notation Verification
+
+on:
+  push:
+    paths:
+      - README.md
+      - 'docs/**/*.md'
+      - 'scripts/check_github_math.mjs'
+      - '.github/workflows/math-rendering.yml'
+  pull_request:
+    paths:
+      - README.md
+      - 'docs/**/*.md'
+      - 'scripts/check_github_math.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-math:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install KaTeX validator
+        run: npm install --no-save --no-package-lock katex@0.16.22
+      - name: Check GitHub math notation and equation delimiters
+        run: node scripts/check_github_math.mjs

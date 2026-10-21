@@ -1,0 +1,21 @@
+{
+  "source": "ENTIRELY COMPUTER-GENERATED directed liability networks",
+  "n_networks_per_cell": 24,
+  "simulation_seed_base": 20261020,
+  "nodes_per_network": 20,
+  "equal_budget_share_of_mean_obligations": 0.12,
+  "densities_prespecified": [
+    0.12,
+    0.22,
+    0.38
+  ],
+  "shock_fractions_prespecified": [
+    0.2,
+    0.4,
+    0.65
+  ],
+  "bootstrap_unit": "independently simulated network",
+  "no_real_bank_or_policy_data": true,
+  "no_identified_causal_policy_effect": true,
+  "compare_across_cells": "Cells change the synthetic network-generating process. Their contrasts are mechanistic sensitivity tests; no real-world estimand or structural bank calibration is asserted."
+}

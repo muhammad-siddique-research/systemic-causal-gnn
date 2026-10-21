@@ -1,5 +1,5 @@
-# Network Fragility Under Stress
-### Financial Contagion · Graph Machine Learning · Cross-Fitted Econometrics · Mechanism-Consistent Stress Testing
+# Network Fragility and Macroprudential Resilience
+### Network Clearing · Graph Neural Networks · Cross-Fitted Econometrics · U.S. Credit-Market Forecasting
 
 [![Research CI](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml/badge.svg)](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776ab)
@@ -12,7 +12,19 @@
 
 > **Evidence classification (essential):** This project currently uses **computer-generated financial networks** and an **independent synthetic partially linear causal experiment**. It does **not** include observed bilateral bank exposures, real policy interventions, clinically observed hospital networks, or identified macroprudential treatment effects. The GAT–GRU has now been evaluated **separately on held-out synthetic networks**. Its predictive metrics are not a causal effect and cannot be directly compared with the tabular models, which use different independent graph draws. See [Data and Identification](docs/DATA_AND_IDENTIFICATION.md).
 
-**Research reading room:** [Scholarly Study (APA 7)](docs/RESEARCH_STUDY.md) · [Data Provenance and Identification](docs/DATA_AND_IDENTIFICATION.md) · [Healthcare Financing Extension](docs/HEALTH_ECONOMICS_TRANSLATION.md) · [Generated Research Report](reports/REPRODUCIBLE_RESULTS.md) · [GitHub Actions](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml)
+## New empirical research extension: public U.S. macro-financial indicators
+
+**Research title:** *Forecasting Credit-Market Stress in the United States: HAC-Robust Econometrics and Out-of-Time Machine Learning alongside Network Stress Simulation.*
+
+This extends the independently generated network/GNN portfolio with an **econometrically distinct research task**: one-month-ahead forecast comparisons for the publicly observed corporate credit spread (FRED Moody's Baa yield minus GS10). The input series are BAA, GS10, UNRATE, INDPRO, and FEDFUNDS. The separate analysis uses chronological train–test validation, Newey–West/HAC inference, a naive persistence benchmark, regularized Ridge Regression, and histogram gradient-boosted trees. It reports forecast errors, temporal split dates, original-series links and input fingerprints.
+
+**Evidence boundary:** Monthly FRED values are genuinely observable U.S. aggregate economic statistics, **not bilateral bank liabilities**. They cannot identify contagion across institutions or validate the graph neural network's bank-default accuracy. The project uses current-revision data rather than vintage-specific historical releases; consequently even an observed-data run is a *retrospective forecast exercise*, not evidence of exactly what historical forecasters could have known.
+
+**Execution status:** Code and **invented offline CSV-fixture tests** are included. [Observed-data study protocol](docs/OBSERVED_MACRO_RESEARCH.md) · [Real-data analysis source](src/research/observed_macro.py) · [Source download script](scripts/download_fred.py) · [Separate FRED execution workflow](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/observed-macro.yml). **Do not cite real FRED numerical results until the workflow confirms a successful official download and exports audited outputs.**
+
+The financial-contagion GNN simulation, the independent known-truth DML experiment, and the empirical aggregate credit-spread forecast have *different observation units and targets*. They are intentionally not collapsed into a fictitious single causal research study.
+
+**Research reading room:** [Scholarly Study (APA 7)](docs/RESEARCH_STUDY.md) · [Data Provenance and Identification](docs/DATA_AND_IDENTIFICATION.md) · [Healthcare Financing Extension](docs/HEALTH_ECONOMICS_TRANSLATION.md) · [Observed U.S. Macro-Financial Extension](docs/OBSERVED_MACRO_RESEARCH.md) · [Generated Research Report](reports/REPRODUCIBLE_RESULTS.md) · [GitHub Actions](https://github.com/muhammad-siddique-research/systemic-causal-gnn/actions/workflows/research.yml)
 
 ## Research at a glance
 
@@ -24,6 +36,7 @@
 | **Predictive Machine Learning** | Logistic regression, Random Forest, boosted trees; split by independent **network**, with separate training, validation and untouched test sets | Out-of-network synthetic default prediction, no node-leakage |
 | **Graph neural architecture** | GAT plus temporal GRU, tested on nine unseen synthetic networks | Held-out metrics published in `reports/gnn/gnn_heldout_metrics.json`; not causal or real-bank evidence |
 | **Research integrity** | Reproducible seeds, convergence assertions, robust error handling, CI, audit logs | Transparent simulated evidence and uncertainty boundaries |
+| **Observed U.S. time-series extension** | Official FRED macro indicators, next-month credit spreads, HAC projection and chronological ML benchmark | Standalone aggregate empirical workflow; **not** evidence of real network edges or causal stress propagation |
 
 ### Reproducible research workflow
 
